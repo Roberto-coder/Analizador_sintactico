@@ -4,10 +4,11 @@ public enum TipoToken {
     COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
 
     // Tokens de uno o dos caracteres
-    BANG, BANG_EQUAL,
-    EQUAL, EQUAL_EQUAL,
+    BANG, BANG_EQUAL,//!,!=
+    EQUAL, EQUAL_EQUAL,//=,==
     GREATER, GREATER_EQUAL,
     LESS, LESS_EQUAL,
+
 
     // Literales
     IDENTIFIER, STRING, NUMBER,

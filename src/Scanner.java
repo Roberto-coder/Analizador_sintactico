@@ -6,8 +6,11 @@ import java.util.Map;
 public class Scanner {
 
     private static final Map<String, TipoToken> palabrasReservadas;
+    private static final Map<String, TipoToken> dos_caracteres;
 
+    private static final Map<String, TipoToken> un_caracter;
     static {
+
         palabrasReservadas = new HashMap<>();
         palabrasReservadas.put("and",    TipoToken.AND);
         palabrasReservadas.put("else",   TipoToken.ELSE);
@@ -22,6 +25,31 @@ public class Scanner {
         palabrasReservadas.put("true",   TipoToken.TRUE);
         palabrasReservadas.put("var",    TipoToken.VAR);
         palabrasReservadas.put("while",  TipoToken.WHILE);
+
+        dos_caracteres = new HashMap<>();
+        dos_caracteres.put("<",  TipoToken.LESS);
+        dos_caracteres.put("<=",  TipoToken.LESS_EQUAL);
+        dos_caracteres.put(">",  TipoToken.GREATER);
+        dos_caracteres.put(">=",  TipoToken.GREATER_EQUAL);
+        dos_caracteres.put("!=",  TipoToken.BANG_EQUAL);
+        dos_caracteres.put("!",  TipoToken.BANG);
+        dos_caracteres.put("=",  TipoToken.EQUAL);
+        dos_caracteres.put("==",  TipoToken.EQUAL_EQUAL);
+        dos_caracteres.put("+",  TipoToken.PLUS);
+        dos_caracteres.put("-",  TipoToken.MINUS);
+
+        un_caracter = new HashMap<>();
+        un_caracter.put("+",  TipoToken.PLUS);
+        un_caracter.put("-",  TipoToken.MINUS);
+        un_caracter.put("*",  TipoToken.MINUS);
+        un_caracter.put("/",  TipoToken.MINUS);
+        un_caracter.put("{",  TipoToken.MINUS);
+        un_caracter.put("}",  TipoToken.MINUS);
+        un_caracter.put("(",  TipoToken.MINUS);
+        un_caracter.put(")",  TipoToken.MINUS);
+        un_caracter.put(",",  TipoToken.MINUS);
+        un_caracter.put(".",  TipoToken.MINUS);
+        un_caracter.put(";",  TipoToken.MINUS);
     }
 
     private final String source;
