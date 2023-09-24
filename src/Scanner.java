@@ -6,9 +6,9 @@ import java.util.Map;
 public class Scanner {
 
     private static final Map<String, TipoToken> palabrasReservadas;
-    private static final Map<String, TipoToken> dos_caracteres;
+    //private static final Map<String, TipoToken> dos_caracteres;
 
-    private static final Map<String, TipoToken> un_caracter;
+    //private static final Map<String, TipoToken> un_caracter;
     static {
 
         palabrasReservadas = new HashMap<>();
@@ -26,30 +26,26 @@ public class Scanner {
         palabrasReservadas.put("var",    TipoToken.VAR);
         palabrasReservadas.put("while",  TipoToken.WHILE);
 
-        dos_caracteres = new HashMap<>();
-        dos_caracteres.put("<",  TipoToken.LESS);
-        dos_caracteres.put("<=",  TipoToken.LESS_EQUAL);
-        dos_caracteres.put(">",  TipoToken.GREATER);
-        dos_caracteres.put(">=",  TipoToken.GREATER_EQUAL);
-        dos_caracteres.put("!=",  TipoToken.BANG_EQUAL);
-        dos_caracteres.put("!",  TipoToken.BANG);
-        dos_caracteres.put("=",  TipoToken.EQUAL);
-        dos_caracteres.put("==",  TipoToken.EQUAL_EQUAL);
-        dos_caracteres.put("+",  TipoToken.PLUS);
-        dos_caracteres.put("-",  TipoToken.MINUS);
+        palabrasReservadas.put("<",  TipoToken.LESS);
+        palabrasReservadas.put("<=",  TipoToken.LESS_EQUAL);
+        palabrasReservadas.put(">",  TipoToken.GREATER);
+        palabrasReservadas.put(">=",  TipoToken.GREATER_EQUAL);
+        palabrasReservadas.put("!=",  TipoToken.BANG_EQUAL);
+        palabrasReservadas.put("!",  TipoToken.BANG);
+        palabrasReservadas.put("=",  TipoToken.EQUAL);
+        palabrasReservadas.put("==",  TipoToken.EQUAL_EQUAL);
 
-        un_caracter = new HashMap<>();
-        un_caracter.put("+",  TipoToken.PLUS);
-        un_caracter.put("-",  TipoToken.MINUS);
-        un_caracter.put("*",  TipoToken.MINUS);
-        un_caracter.put("/",  TipoToken.MINUS);
-        un_caracter.put("{",  TipoToken.MINUS);
-        un_caracter.put("}",  TipoToken.MINUS);
-        un_caracter.put("(",  TipoToken.MINUS);
-        un_caracter.put(")",  TipoToken.MINUS);
-        un_caracter.put(",",  TipoToken.MINUS);
-        un_caracter.put(".",  TipoToken.MINUS);
-        un_caracter.put(";",  TipoToken.MINUS);
+        palabrasReservadas.put("+",  TipoToken.PLUS);
+        palabrasReservadas.put("-",  TipoToken.MINUS);
+        palabrasReservadas.put("*",  TipoToken.STAR);
+        palabrasReservadas.put("/",  TipoToken.SLASH);
+        palabrasReservadas.put("{",  TipoToken.LEFT_BRACE);
+        palabrasReservadas.put("}",  TipoToken.RIGHT_BRACE);
+        palabrasReservadas.put("(",  TipoToken.LEFT_PAREN);
+        palabrasReservadas.put(")",  TipoToken.RIGHT_PAREN);
+        palabrasReservadas.put(",",  TipoToken.COMMA);
+        palabrasReservadas.put(".",  TipoToken.DOT);
+        palabrasReservadas.put(";",  TipoToken.SEMICOLON);
     }
 
     private final String source;
@@ -88,6 +84,20 @@ public class Scanner {
                         estado = 0;
                         tokens.add(t);
                         */
+
+                    }
+                    else if(c=='<'){
+                        estado=1;
+                        lexema += c;
+                    }
+                    break;
+                case 1:
+                    if(c=='='){
+                        Token t = new Token(TipoToken.LESS_EQUAL, lexema);
+                        tokens.add(t);
+                    }else if(c=='>'){
+
+                    }else{
 
                     }
                     break;
