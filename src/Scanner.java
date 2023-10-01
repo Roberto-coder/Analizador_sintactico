@@ -93,8 +93,12 @@ public class Scanner {
                     break;
                 case 1:
                     if(c=='='){
+                        lexema += c;
                         Token t = new Token(TipoToken.LESS_EQUAL, lexema);
                         tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
                     }else if(c=='>'){
 
                     }else{

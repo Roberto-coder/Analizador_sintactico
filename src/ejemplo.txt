@@ -1,0 +1,35 @@
+# Función para calcular la serie de Fibonacci
+int main() {
+    // Este es un comentario de una sola línea
+    /* Este es un comentario
+       de varias líneas */
+    float x = 3.14;
+    string mensaje = "Hola, mundo!";
+    for (int i = 0; i < 10; i++) {
+        if (i % 2 == 0) {
+            print(mensaje);
+        }
+    }
+    return 0;
+}
+
+def fibonacci(n):
+    fib_series = []
+    a, b = 0, 1
+    for _ in range(n):
+        fib_series.append(a)
+        a, b = b, a + b
+    return fib_series
+
+#Solicitar al usuario cuántos términos de la serie de Fibonacci desea calcular
+try:
+    n = int(input("Ingrese el número de términos de la serie de Fibonacci que desea calcular: "))
+    
+    if n <= 0:
+        print("Por favor, ingrese un número entero positivo.")
+    else:
+        result = fibonacci(n)
+        print("La serie de Fibonacci con", n, "términos es:")
+        print(result)
+except ValueError:
+    print("Por favor, ingrese un número entero válido.")
