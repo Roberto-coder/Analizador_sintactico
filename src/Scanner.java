@@ -46,6 +46,7 @@ public class Scanner {
         palabrasReservadas.put(",",  TipoToken.COMMA);
         palabrasReservadas.put(".",  TipoToken.DOT);
         palabrasReservadas.put(";",  TipoToken.SEMICOLON);
+        palabrasReservadas.put(" \" ", TipoToken.DOUBLE_QUOTE);
     }
 
     private final String source;
@@ -92,6 +93,10 @@ public class Scanner {
                     }
                     else if(c=='/'){
                         estado=26;
+                        lexema += c;
+                    }
+                    else if(c=='"'){
+                        estado=24;
                         lexema += c;
                     }
                     break;
@@ -204,6 +209,18 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                         i--;
+                    }
+                case 24:
+                    if(c=='"'){
+                        Token t = new Token(TipoToken.STRING, lexema.toString());
+                        tokens.add(t);
+
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }else{
+                        estado=24;
+                        lexema +=c;
                     }
                 case 26:
                     if(c=='*'){
