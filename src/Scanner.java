@@ -91,8 +91,9 @@ public class Scanner {
                         lexema += c;
                     }
                     else if(c=='/'){
-                        estado=26;
                         lexema += c;
+                        estado=26;
+
                     }
                     break;
                 case 1:
@@ -207,11 +208,13 @@ public class Scanner {
                     }
                 case 26:
                     if(c=='*'){
+                        lexema +=c;
                         estado=27;
-                        lexema +=c;
+
                     }else if(c=='/'){
-                        estado=30;
                         lexema +=c;
+                        estado=30;
+
                     }else{
                         Token t = new Token(TipoToken.SLASH, lexema);
                         tokens.add(t);
@@ -222,36 +225,43 @@ public class Scanner {
                     }
                 case 27:
                     if(c=='*'){
-                        estado=28;
                         lexema += c;
+                        estado=28;
+
                     }else{
-                        estado=27;
                         lexema+=c;
+                        estado=27;
+
                     }
                 case 28:
                     if(c=='*'){
-                        estado = 28;
                         lexema += c;
+                        estado = 28;
+
                     }else if(c=='/'){
+                        lexema += c;
                         System.out.println("comentario no genera token"+lexema);
 
                         estado = 0;
                         lexema = "";
                         i--;
                     }else{
-                        estado=27;
                         lexema +=c;
+                        estado=27;
+
                     }
                 case 30:
                     if(c=='\n'){
+                        lexema += c;
                         System.out.println("comentario no genera token"+lexema);
 
                         estado = 0;
                         lexema = "";
                         i--;
                     }else{
-                        estado=30;
                         lexema+=c;
+                        estado=30;
+
                     }
                     break;
             }
