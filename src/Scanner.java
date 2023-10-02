@@ -122,13 +122,15 @@ public class Scanner {
                         lexema = "";
                         i--;
                     }else{
-                        estado=3;
                         lexema += c;
+                        Token t = new Token(TipoToken.GREATER, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
                     }
                     break;
-                case 3:
 
-                    break;
                 case 4:
                     if (c=='='){
                         lexema += c;
@@ -138,8 +140,12 @@ public class Scanner {
                         lexema = "";
                         i--;
                     }else {
-                        estado=6;
                         lexema += c;
+                        Token t = new Token(TipoToken.LESS, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
                     }
                     break;
                 case 6:
@@ -161,7 +167,12 @@ public class Scanner {
                     lexema = "";
                     i--;
                 }else{
-
+                    lexema += c;
+                    Token t = new Token(TipoToken.EQUAL, lexema);
+                    tokens.add(t);
+                    estado = 0;
+                    lexema = "";
+                    i--;
                 }
                 break;
                 case 10:
@@ -173,7 +184,12 @@ public class Scanner {
                         lexema = "";
                         i--;
                     }else{
-
+                        lexema += c;
+                        Token t = new Token(TipoToken.BANG, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
                     }
                     break;
                 case 13:
