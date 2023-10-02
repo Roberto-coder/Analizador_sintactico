@@ -87,8 +87,12 @@ public class Scanner {
                         */
 
                     }
-                    else if(c=='<'){
+                    else if(c=='>'){
                         estado=1;
+                        lexema += c;
+                    }
+                    else if(c=='<'){
+                        estado=4;
                         lexema += c;
                     }
                     else if(c=='/'){
@@ -103,7 +107,7 @@ public class Scanner {
                 case 1:
                     if(c=='='){
                         lexema += c;
-                        Token t = new Token(TipoToken.LESS_EQUAL, lexema);
+                        Token t = new Token(TipoToken.GREATER_EQUAL, lexema);
                         tokens.add(t);
                         estado = 0;
                         lexema = "";
@@ -114,6 +118,17 @@ public class Scanner {
 
                     }
                     break;
+                case 4:
+                    if (c=='='){
+                        lexema += c;
+                        Token t = new Token(TipoToken.LESS_EQUAL, lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }else {
+
+                    }
 
                 case 13:
                     if(Character.isLetterOrDigit(c)){
