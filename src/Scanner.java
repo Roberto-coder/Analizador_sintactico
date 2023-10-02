@@ -46,7 +46,7 @@ public class Scanner {
         palabrasReservadas.put(",",  TipoToken.COMMA);
         palabrasReservadas.put(".",  TipoToken.DOT);
         palabrasReservadas.put(";",  TipoToken.SEMICOLON);
-        palabrasReservadas.put(" \" ", TipoToken.DOUBLE_QUOTE);
+        //palabrasReservadas.put(" \" ", TipoToken.DOUBLE_QUOTE);
     }
 
     private final String source;
@@ -336,12 +336,9 @@ public class Scanner {
                     break;
 
                 case 30:
-<<<<<<< HEAD
-                    if(c=='\n'){
+                    if(c=='\n') {
                         lexema += c;
-=======
-                    if(c==' '){
->>>>>>> c652e22f3a5087896d8850dcd820fa6fa6f51d7f
+                    }else if(c==' '){
                         System.out.println("comentario no genera token"+lexema);
 
                         estado = 0;
