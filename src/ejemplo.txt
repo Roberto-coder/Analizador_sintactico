@@ -15,15 +15,14 @@ int main() {
     return 0;
 }
 
-def fibonacci(n):
+fun fibonacci(n):
     fib_series = []
     a, b = 0, 1
-    for _ in range(n):
+    for (n):
         fib_series.append(a)
         a, b = b, a + b
     return fib_series
 
-#Solicitar al usuario cuántos términos de la serie de Fibonacci desea calcular
 try:
     n = int(input("Ingrese el número de términos de la serie de Fibonacci que desea calcular: "))
     
