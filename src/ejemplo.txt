@@ -1,6 +1,6 @@
-# Función para calcular la serie de Fibonacci
+
 int main() {
-12.5E+12
+2.5E-3
 }
     // Este es un comentario de una sola línea
     /* Este es un comentario
