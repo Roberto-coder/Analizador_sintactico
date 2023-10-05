@@ -379,8 +379,10 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                     }else if(c=='\n'){
-
                         System.out.println("Error, falta cerrar comillas");
+                        estado = 0;
+                        lexema = "";
+                        i--;
 
                     }else{
                         estado=24;
