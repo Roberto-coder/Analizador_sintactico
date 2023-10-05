@@ -174,7 +174,7 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                     }else{
-                        lexema += c;
+
                         Token t = new Token(TipoToken.GREATER, lexema);
                         tokens.add(t);
                         estado = 0;
@@ -190,7 +190,7 @@ public class Scanner {
                         estado = 0;
                         lexema = "";
                     }else {
-                        lexema += c;
+
                         Token t = new Token(TipoToken.LESS, lexema);
                         tokens.add(t);
                         estado = 0;
@@ -206,7 +206,7 @@ public class Scanner {
                     estado = 0;
                     lexema = "";
                 }else{
-                    lexema += c;
+
                     Token t = new Token(TipoToken.EQUAL, lexema);
                     tokens.add(t);
                     estado = 0;
@@ -378,6 +378,10 @@ public class Scanner {
 
                         estado = 0;
                         lexema = "";
+                    }else if(c=='\n'){
+
+                        System.out.println("Error, falta cerrar comillas");
+
                     }else{
                         estado=24;
                         lexema +=c;
