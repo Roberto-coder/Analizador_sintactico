@@ -163,6 +163,16 @@ public class Scanner {
                         tokens.add(t);
                         estado = 0;
                         lexema = "";
+                    }else{
+                        if(Character.isWhitespace(c)){
+
+                        }else{
+                            lexema +=c;
+                            System.out.println("El caracter no esta dentro del lenguaje: " + lexema);
+                            estado = 0;
+                            lexema = "";
+                        }
+
                     }
 
                     break;
@@ -282,10 +292,10 @@ public class Scanner {
                         lexema += c;
                     }else{
                         lexema += c;
-                        System.out.println(lexema+" no es estado de aceptacion, no genera token");
+                        System.out.println(" "+lexema+" no es estado de aceptacion, no genera token");
                         estado = 0;
                         lexema = "";
-                        i--;
+                        //i--;
                     }
                     break;
                 case 17:
@@ -295,6 +305,12 @@ public class Scanner {
                     }else if(c == 'E'){
                         estado=18;
                         //lexema += c;
+                    }else if(Character.isLetter(c)){
+                        lexema += c;
+                        System.out.println(" "+lexema+" no es estado de aceptacion, no genera token");
+                        estado = 0;
+                        lexema = "";
+                        //i--;
                     }else{
                         Token t = new Token(TipoToken.NUMBER, lexema, Float.valueOf(lexema));
                         tokens.add(t);
@@ -321,7 +337,7 @@ public class Scanner {
                         System.out.println(lexema+" no es estado de aceptacion, no genera token");
                         estado = 0;
                         lexema = "";
-                        i--;
+                        //i--;
                     }
                     break;
                 case 19:
@@ -340,6 +356,11 @@ public class Scanner {
                     if(Character.isDigit(c)){
                         estado=20;
                         lexema2 += c;
+                    }else if(Character.isLetter(c)){
+                            System.out.println("No es estado de aceptación");
+                            estado = 0;
+                            lexema = "";
+                            //i--;
                     }else{
                         long exponenteL=1L;
                         double exponenteD;
@@ -347,7 +368,6 @@ public class Scanner {
                         double num1=Double.parseDouble(lexema);
                         double num2=Double.parseDouble(lexema2);
                         exponenteD=Math.pow(base,num2);
-                        System.out.println(exponenteD);
                         if(flag==-1){
 
                             Token t = new Token(TipoToken.NUMBER, lexema+"E"+lexema2, num1*exponenteD);
@@ -448,12 +468,18 @@ public class Scanner {
 
                     }
                     break;
+                /*default:
+                    lexema +=c;
+                    //throw new IllegalStateException("El caracter no esta dentro del lenguaje: " + lexema);
+                    System.out.println("El caracter no esta dentro del lenguaje: " + lexema);
+                    estado = 0;
+                    lexema = "";*/
             }
 
 
         }
-
-
+        //tokens.add(new Token(TipoToken.EOF, "", source.length()));
+        tokens.add(new Token(TipoToken.EOF, "", null));
         return tokens;
     }
 }
