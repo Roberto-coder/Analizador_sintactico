@@ -190,9 +190,9 @@ public class ASDR implements Parser {
             coincidir(para);
             if(preanalisis.equals(parentesis_abre)){
                 coincidir(parentesis_abre);
-                //For_stmt_1();
-                //For_stmt_2();
-                //For_stmt_3();
+                For_stmt_1();
+                For_stmt_2();
+                For_stmt_3();
                 if(preanalisis.equals(parentesis_cierra)){
                     coincidir(parentesis_cierra);
                     Statement();
@@ -203,11 +203,45 @@ public class ASDR implements Parser {
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'for'.");
         }
     }
+    void For_stmt_1(){
+        if(hayErrores) return;
+        if(preanalisis.equals(var)){
+            Var_decl();
+        } else if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo)|| preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) ){ //************************************
+            Expr_stmt();
+        } else if(preanalisis.equals(puntoycoma)){
+            coincidir(puntoycoma);
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'var', una 'expresion' ó ';'.");
+        }
 
+    }
 
+    void For_stmt_2(){
+        if(hayErrores) return;
+        if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre)){ //********************************************
+            Expression();
+            if(preanalisis.equals(puntoycoma)){
+                coincidir(puntoycoma);
+            }
+        } else if(preanalisis.equals(puntoycoma)){
+            coincidir(puntoycoma);
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'for' o ';'.");
+        }
+    }
 
+    void For_stmt_3(){
+        if(hayErrores) return;
+        if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre)){
+            Expression();
+        } else { //EPSILON
 
+        }
 
+    }
 
     void If_stmt(){
         if(hayErrores) return;
@@ -227,12 +261,16 @@ public class ASDR implements Parser {
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'if'.");
         }
     }
+    void Else_statement(){
+        if(hayErrores) return;
+        if(preanalisis.equals(de_otro_modo)){
+            coincidir(de_otro_modo);
+            Statement();
+        } else { //EPSILON
 
-
-
-
-
-
+        }
+        //**
+    }
 
     void Print_stmt(){
         if(hayErrores) return;
