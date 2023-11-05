@@ -154,6 +154,123 @@ public class ASDR implements Parser {
 
 /*---------------------------------------------------------------------*/
 /*----------------------SENTENCIAS--------------------------------*/
+    void Statement(){
+        if(hayErrores) return;
+        if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) ){
+            Expr_stmt();
+        } else if(preanalisis.equals(para)){
+            For_stmt();
+        } else if(preanalisis.equals(si)){
+            If_stmt();
+        }else if(preanalisis.equals(imprimir)){
+            Print_stmt();
+        } else if(preanalisis.equals(regresa)){
+            Return_stmt();
+        } else if(preanalisis.equals(mientras)){
+            While_stmt();
+        } else if(preanalisis.equals(llave_abre)){
+            Block();
+        }
+    }
+    void Expr_stmt(){
+        if(hayErrores) return;
+        Expression();
+        if(preanalisis.equals(puntoycoma)){
+            coincidir(puntoycoma);
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba ';'.");
+        }
+
+        //************************
+    }
+    void For_stmt(){
+        if(hayErrores) return;
+        if(preanalisis.equals(para)){
+            coincidir(para);
+            if(preanalisis.equals(parentesis_abre)){
+                coincidir(parentesis_abre);
+                //For_stmt_1();
+                //For_stmt_2();
+                //For_stmt_3();
+                if(preanalisis.equals(parentesis_cierra)){
+                    coincidir(parentesis_cierra);
+                    Statement();
+                }
+            }
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'for'.");
+        }
+    }
+
+
+
+
+
+
+    void If_stmt(){
+        if(hayErrores) return;
+        if(preanalisis.equals(si)){
+            coincidir(si);
+            if(preanalisis.equals(parentesis_abre)){
+                coincidir(parentesis_abre);
+                Expression();
+                if(preanalisis.equals(parentesis_cierra)){
+                    coincidir(parentesis_cierra);
+                    Statement();
+                    //Else_statement();
+                }
+            }
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'if'.");
+        }
+    }
+
+
+
+
+
+
+
+    void Print_stmt(){
+        if(hayErrores) return;
+        if(preanalisis.equals(imprimir)){
+            coincidir(imprimir);
+            Expression();
+            if(preanalisis.equals(puntoycoma)){
+                coincidir(puntoycoma);
+            }
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'print'.");
+        }
+    }
+
+    void Return_stmt(){
+        if(hayErrores) return;
+        if(preanalisis.equals(regresa)){
+            coincidir(regresa);
+            Return_exp_opc();
+            if(preanalisis.equals(puntoycoma)){
+                coincidir(puntoycoma);
+            }
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'return'.");
+        }
+    }
+    void Return_exp_opc(){
+        if(hayErrores) return;
+        if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) ){ //*********
+            Expression();
+        } else { //EPSILON
+
+        }
+
+    }
+
 
 
 
