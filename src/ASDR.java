@@ -309,25 +309,133 @@ public class ASDR implements Parser {
 
     }
 
+    void While_stmt(){
+
+    }
+
+    void Block(){
+
+    }
+
 
 
 
 
 /*----------------------------------------------------------------*/
 /*----------------------Expresiones--------------------------------*/
-void Expression(){
-    if(hayErrores) return;
+    void Expression(){
+        if(hayErrores) return;
     //Assignment();
-}
+    }
+
+    void Assigment(){
+
+    }
+
+    void Assignment_opc(){
+
+    }
+
+    void Logic_or(){
+
+    }
+
+    void Logic_or_2(){
+
+    }
+
+    void Logic_and(){
+
+    }
+
+    void Logic_and_2(){
+
+    }
+
+    void Equality(){
+
+    }
+
+    void Equality_2(){
+
+    }
+
+    void Comparison(){
+
+    }
+
+    void Comparison_2(){
+
+    }
+
+    void Term(){
+
+    }
+
+    void Term_2(){
+
+    }
+
+    void Factor(){
+
+    }
+
+    void Factor_2(){
+
+    }
+
+    void Unary(){
+
+    }
+
+    void Call(){
+
+    }
+
+    void Call_2(){
+
+    }
+
+    void Primary(){
+
+    }
 
 
 
 /*----------------------------------------------------------------*/
 /*----------------------Otras--------------------------------*/
+    void Function(){
+
+    }
+
+    void Functions(){
+
+    }
+
+    void Parameters_opc(){
+
+    }
+
+    void Parameters(){
+
+    }
+
+    void Parameters_2(){
+
+    }
+
+    void Arguments_opc(){
+
+    }
+
+    void Arguments(){
+
+    }
 
 
 
 
 /*----------------------------------------------------------------*/
+
 
 }
