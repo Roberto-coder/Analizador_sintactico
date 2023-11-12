@@ -99,7 +99,7 @@ public class ASDR implements Parser {
             Var_decl();
             Declaracion();
         } else if (preanalisis.equals(igual)) {
-            //Statement();
+            Statement();
             Declaracion();
         } else { //EPSILON
 
@@ -116,7 +116,7 @@ public class ASDR implements Parser {
         if (hayErrores) return;
         if (preanalisis.equals(fun)) {
             coincidir(fun);
-            //Function();
+            Function();
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'fun'.");
@@ -253,7 +253,7 @@ public class ASDR implements Parser {
                 if(preanalisis.equals(parentesis_cierra)){
                     coincidir(parentesis_cierra);
                     Statement();
-                    //Else_statement();
+                    Else_statement();
                 }
             }
         } else {
@@ -310,18 +310,56 @@ public class ASDR implements Parser {
     }
 
     void While_stmt(){
-
+        if(hayErrores) return;
+        if(preanalisis.equals(mientras)){
+            coincidir(mientras);
+            if(preanalisis.equals(parentesis_abre)){
+                coincidir(parentesis_abre);
+                Expression();
+                if(preanalisis.equals(parentesis_cierra)){
+                    coincidir(parentesis_cierra);
+                    Statement();
+                }
+            }
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba WHILE.");
+        }
     }
 
     void Block(){
-
+        if(hayErrores) return;
+        if(preanalisis.equals(llave_abre)){
+            coincidir(llave_abre);
+            Declaracion();
+            if(preanalisis.equals(llave_cierra)){
+                coincidir(llave_cierra);
+            }
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba una LLAVE ABRIENDO.");
+        }
     }
 
+    /*void Block_decl(){
+        if(hayErrores) return;
+        if(preanalisis.equals(fun) || preanalisis.equals(var) || preanalisis.equals(para) || preanalisis.equals(si) || preanalisis.equals(imprimir) || preanalisis.equals(para) || preanalisis.equals(regresa) || preanalisis.equals(mientras) || preanalisis.equals(llave_abre) || preanalisis.equals(neg_logica) || preanalisis.equals(resta)){
+            Declaracion();
+            Block_decl();
+        } else { //EPSILON
+
+        }
+
+    }*/
 
 
 
 
-/*----------------------------------------------------------------*/
+
+
+
+
+    /*----------------------------------------------------------------*/
 /*----------------------Expresiones--------------------------------*/
     void Expression(){
         if(hayErrores) return;
@@ -404,33 +442,103 @@ public class ASDR implements Parser {
 
 /*----------------------------------------------------------------*/
 /*----------------------Otras--------------------------------*/
-    void Function(){
-
+void Function(){
+    if(hayErrores) return;
+    if(preanalisis.equals(identificador)){
+        coincidir(identificador);
+        if(preanalisis.equals(parentesis_abre)){
+            coincidir(parentesis_abre);
+            Parameters_opc();
+            if(preanalisis.equals(parentesis_cierra)){
+                coincidir(parentesis_cierra);
+                Block();
+            }
+        }
+    } else {
+        hayErrores = true;
+        System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificiador'.");
     }
+}
 
     void Functions(){
+        if(hayErrores) return;
+        if(preanalisis.equals(identificador)){
+            Fun_decl();
+            Functions();
+        } else { //EPSILON
+
+        }
 
     }
 
     void Parameters_opc(){
+        if(hayErrores) return;
+        if(preanalisis.equals(identificador)){
+            coincidir(identificador);
+            Parameters();
+        } else { //EPSILON
+
+        }
 
     }
 
     void Parameters(){
-
+        if(hayErrores) return;
+        if(preanalisis.equals(identificador)){
+            coincidir(identificador);
+            Parameters_2();
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificador'.");
+        }
     }
 
     void Parameters_2(){
+        if(hayErrores) return;
+        if(preanalisis.equals(coma)){
+            coincidir(coma);
+            if(preanalisis.equals(identificador)){
+                coincidir(identificador);
+                Parameters_2();
+            }
+        } else { //EPSILON
+
+        }
 
     }
 
     void Arguments_opc(){
+        if(hayErrores) return;
+        if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo)  || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) ){
+            Expression();
+            Arguments();
+        } else { //EPSILON
+
+        }
 
     }
+
+    /*void Arguments(){
+        if(hayErrores) return;
+        Expression();
+        Arguments_2();
+
+    }*/
 
     void Arguments(){
+        if(hayErrores) return;
+        if(preanalisis.equals(coma)){
+            coincidir(coma);
+            Expression();
+            Arguments();
+        } else { //EPSILON
+
+        }
 
     }
+
+    //AQUI TERMINA TODA LA GRAMATICA DEL PROYECTO
+
 
 
 
