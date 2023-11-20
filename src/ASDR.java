@@ -98,10 +98,10 @@ public class ASDR implements Parser {
         } else if (preanalisis.equals(var)) {
             Var_decl();
             Declaracion();
-        } else if (preanalisis.equals(igual)) {
+        }  else if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(para) || preanalisis.equals(si) || preanalisis.equals(imprimir) || preanalisis.equals(regresa) || preanalisis.equals(mientras) || preanalisis.equals(llave_abre) ||  preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(este) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) || preanalisis.equals(zuper) ){
             Statement();
             Declaracion();
-        } else { //EPSILON
+        }  else { //EPSILON
 
         }
         /*
@@ -352,90 +352,228 @@ public class ASDR implements Parser {
 
     }*/
 
-
-
-
-
-
-
-
     /*----------------------------------------------------------------*/
 /*----------------------Expresiones--------------------------------*/
     void Expression(){
         if(hayErrores) return;
-    //Assignment();
+        Assignment();
     }
 
-    void Assigment(){
-
+    void Assignment(){
+        if(hayErrores) return;
+        Logic_or();
+        Assignment_opc();
     }
 
     void Assignment_opc(){
+        if(hayErrores) return;
+        if(preanalisis.equals(igual)){
+            coincidir(igual);
+            Expression();
+        } else { //EPSILON
 
+        }
     }
 
     void Logic_or(){
-
+        if(hayErrores) return;
+        Logic_and();
+        Logic_or_2();
     }
 
     void Logic_or_2(){
+        if(hayErrores) return;
+        if(preanalisis.equals(O)){
+            coincidir(O);
+            Logic_and();
+            Logic_or_2();
+        } else { //EPSILON
 
+        }
     }
 
     void Logic_and(){
-
+        if(hayErrores) return;
+        Equality();
+        Logic_and_2();
     }
 
     void Logic_and_2(){
+        if(hayErrores) return;
+        if(preanalisis.equals(Y)){
+            coincidir(Y);
+            Equality();
+            Logic_and_2();
+        } else { //EPSILON
 
+        }
     }
 
     void Equality(){
-
+        if(hayErrores) return;
+        Comparison();
+        Equality_2();
     }
 
     void Equality_2(){
+        if(hayErrores) return;
+        if(preanalisis.equals(diferente_de)){
+            coincidir(diferente_de);
+            Comparison();
+            Equality_2();
+        } else if(preanalisis.equals(igual_a)){
+            coincidir(igual_a);
+            Comparison();
+            Equality_2();
+        } else { //EPSILON
 
+        }
     }
 
     void Comparison(){
-
+        if(hayErrores) return;
+        Term();
+        Comparison_2();
     }
 
     void Comparison_2(){
+        if(hayErrores) return;
+        if(preanalisis.equals(mayor_a)){
+            coincidir(mayor_a);
+            Term();
+            Comparison_2();
+        } else if(preanalisis.equals(mayor_iguala)){
+            coincidir(mayor_iguala);
+            Term();
+            Comparison_2();
+        } else if(preanalisis.equals(menor_a)){
+            coincidir(menor_a);
+            Term();
+            Comparison_2();
+        } else if(preanalisis.equals(menor_iguala)){
+            coincidir(menor_iguala);
+            Term();
+            Comparison_2();
+        } else { //EPSILON
 
+        }
     }
 
     void Term(){
-
+        if(hayErrores) return;
+        Factor();
+        Term_2();
     }
 
     void Term_2(){
+        if(hayErrores) return;
+        if(preanalisis.equals(resta)){
+            coincidir(resta);
+            Factor();
+            Term_2();
+        } else if(preanalisis.equals(suma)){
+            coincidir(suma);
+            Factor();
+            Term_2();
+        } else { //EPSILON
 
+        }
     }
 
     void Factor(){
-
+        if(hayErrores) return;
+        Unary();
+        Factor_2();
     }
 
     void Factor_2(){
+        if(hayErrores) return;
+        if(preanalisis.equals(division)){
+            coincidir(division);
+            Unary();
+            Factor_2();
+        } else if(preanalisis.equals(multiplicacion)){
+            coincidir(multiplicacion);
+            Unary();
+            Factor_2();
+        } else { //EPSILON
 
+        }
     }
 
     void Unary(){
-
+        if(hayErrores) return;
+        if(preanalisis.equals(neg_logica)){
+            coincidir(neg_logica);
+            Unary();
+        } else if(preanalisis.equals(resta)){
+            coincidir(resta);
+            Unary();
+        } else {
+            Call();
+        }
     }
 
     void Call(){
-
+        if(hayErrores) return;
+        Primary();
+        Call_2();
     }
 
     void Call_2(){
+        if(hayErrores) return;
+        if(preanalisis.equals(parentesis_abre)){
+            coincidir(parentesis_abre);
+            Arguments_opc();
+            if(preanalisis.equals(parentesis_cierra)){
+                coincidir(parentesis_cierra);
+                Call_2();
+            }
+        } else if(preanalisis.equals(punto)){
+            coincidir(punto);
+            if(preanalisis.equals(identificador)){
+                coincidir(identificador);
+                Call_2();
+            }
+        } else { //EPSILON
 
+        }
     }
 
     void Primary(){
-
+        if(hayErrores) return;
+        if(preanalisis.equals(verdadero)){
+            coincidir(verdadero);
+        } else if(preanalisis.equals(falso)){
+            coincidir(falso);
+        } else if(preanalisis.equals(nulo)){
+            coincidir(nulo);
+        } else if(preanalisis.equals(este)){
+            coincidir(este);
+        } else if(preanalisis.equals(numero)){
+            coincidir(numero);
+        } else if(preanalisis.equals(cadena)){
+            coincidir(cadena);
+        } else if(preanalisis.equals(identificador)){
+            coincidir(identificador);
+        } else if(preanalisis.equals(parentesis_abre)){
+            coincidir(parentesis_abre);
+            Expression();
+            if(preanalisis.equals(parentesis_cierra)){
+                coincidir(parentesis_cierra);
+            }
+        } else if(preanalisis.equals(zuper)){
+            coincidir(zuper);
+            if(preanalisis.equals(punto)){
+                coincidir(punto);
+                if(preanalisis.equals(identificador)){
+                    coincidir(identificador);
+                }
+            }
+        } else {
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba algun PRIMARY.");
+        }
     }
 
 
