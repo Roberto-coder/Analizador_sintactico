@@ -31,6 +31,8 @@ public class ASDR implements Parser {
     private final Token resta = new Token(TipoToken.MINUS, "-");
     private final Token suma = new Token(TipoToken.PLUS, "+");
     private final Token neg_logica = new Token(TipoToken.BANG, "!");
+    private final Token multiplicacion = new Token(TipoToken.STAR,"*");
+    private final Token division = new Token(TipoToken.SLASH,"/");
 
 
     private final Token verdadero = new Token(TipoToken.TRUE, "true");
@@ -98,7 +100,7 @@ public class ASDR implements Parser {
         } else if (preanalisis.equals(var)) {
             Var_decl();
             Declaracion();
-        }  else if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(para) || preanalisis.equals(si) || preanalisis.equals(imprimir) || preanalisis.equals(regresa) || preanalisis.equals(mientras) || preanalisis.equals(llave_abre) ||  preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(este) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) || preanalisis.equals(zuper) ){
+        }  else if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(para) || preanalisis.equals(si) || preanalisis.equals(imprimir) || preanalisis.equals(regresa) || preanalisis.equals(mientras) || preanalisis.equals(llave_abre) ||  preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre)){
             Statement();
             Declaracion();
         }  else { //EPSILON
@@ -527,13 +529,6 @@ public class ASDR implements Parser {
             Arguments_opc();
             if(preanalisis.equals(parentesis_cierra)){
                 coincidir(parentesis_cierra);
-                Call_2();
-            }
-        } else if(preanalisis.equals(punto)){
-            coincidir(punto);
-            if(preanalisis.equals(identificador)){
-                coincidir(identificador);
-                Call_2();
             }
         } else { //EPSILON
 
@@ -548,8 +543,6 @@ public class ASDR implements Parser {
             coincidir(falso);
         } else if(preanalisis.equals(nulo)){
             coincidir(nulo);
-        } else if(preanalisis.equals(este)){
-            coincidir(este);
         } else if(preanalisis.equals(numero)){
             coincidir(numero);
         } else if(preanalisis.equals(cadena)){
@@ -561,14 +554,6 @@ public class ASDR implements Parser {
             Expression();
             if(preanalisis.equals(parentesis_cierra)){
                 coincidir(parentesis_cierra);
-            }
-        } else if(preanalisis.equals(zuper)){
-            coincidir(zuper);
-            if(preanalisis.equals(punto)){
-                coincidir(punto);
-                if(preanalisis.equals(identificador)){
-                    coincidir(identificador);
-                }
             }
         } else {
             hayErrores = true;
