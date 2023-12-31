@@ -1,10 +1,15 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+
 public class ASDR implements Parser {
 
     private int i = 0;
     private boolean hayErrores = false;
     private Token preanalisis;
     private final List<Token> tokens;
+
+    private Node root=new Node();
     //tokens
     private final Token identificador = new Token(TipoToken.IDENTIFIER, "");
     private final Token coma = new Token(TipoToken.COMMA, ",");
@@ -53,7 +58,8 @@ public class ASDR implements Parser {
 
     /*----------------------PROGRAM--------------------------------*/
     public boolean parse() {
-        Program();
+        root=Program();
+        TreePrinter.printTree(root);
 
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
             System.out.println("Consulta correcta");
@@ -65,16 +71,18 @@ public class ASDR implements Parser {
     }
 
 
-    public void Program() {
+    public Node Program() {
+        Node raiz=new Node("Declaration");
         preanalisis = tokens.get(i);
 
-        Declaracion();
+        Declaracion(raiz);
 
         if (!hayErrores && !preanalisis.equals(finCadena)) {
             System.out.println("Error en la posición " + preanalisis.posicion + ". No se esperaba el token " + preanalisis.tipo);
         } else if (!hayErrores && preanalisis.equals(finCadena)) {
             System.out.println("Consulta válida");
         }
+        return raiz;
 
     }
 
@@ -92,36 +100,43 @@ public class ASDR implements Parser {
     /*--------------------------------------------------------------*/
     /*----------------------DECLARACIONES--------------------------------*/
 
-    void Declaracion() {
+    void Declaracion(Node node) {
+        Node node1=new Node();
         if (hayErrores) return;
         if (preanalisis.equals(fun)) {
-            Fun_decl();
-            Declaracion();
+            Statement funDecl = Fun_decl(node1);
+            node1=new Node("\t"+funDecl.imprimir());
+            node.addChild(node1);
+            Declaracion(node1);
         } else if (preanalisis.equals(var)) {
-            Var_decl();
-            Declaracion();
+            /*Var_decl();
+            Declaracion();*/
         }  else if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(para) || preanalisis.equals(si) || preanalisis.equals(imprimir) || preanalisis.equals(regresa) || preanalisis.equals(mientras) || preanalisis.equals(llave_abre) ||  preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre)){
-            Statement();
-            Declaracion();
+            /*Statement();
+            Declaracion();*/
         }  else { //EPSILON
 
         }
-        /*
-        if(!preanalisis.equals(finCadena)){
-            System.out.println("Error en la posición " + preanalisis.posicion + ". No se esperaba el token " + preanalisis.tipo);
-        }else if(!hayErrores){
-            System.out.println("Consulta válida");
-        }*/
+
+
     }
 
-    void Fun_decl() {
-        if (hayErrores) return;
+    Statement Fun_decl(Node node) {
+        Node nodo1=new Node("");
+        if (hayErrores) return null;
         if (preanalisis.equals(fun)) {
-            coincidir(fun);
-            Function();
+            /*coincidir(fun);
+            Function();*/
+            Statement function= Function(nodo1);
+            nodo1=new Node(function.imprimir());
+            node.addChild(nodo1);
+
+            return function;
+
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'fun'.");
+            return null;
         }
     }
 
@@ -171,7 +186,7 @@ public class ASDR implements Parser {
         } else if(preanalisis.equals(mientras)){
             While_stmt();
         } else if(preanalisis.equals(llave_abre)){
-            Block();
+            //Block();
         }
     }
     void Expr_stmt(){
@@ -329,30 +344,26 @@ public class ASDR implements Parser {
         }
     }
 
-    void Block(){
-        if(hayErrores) return;
+    Statement Block(Node node){
+        Node nodo1=new Node("");
+        StmtBlock stmtblock =null;
+        if(hayErrores) return null;
         if(preanalisis.equals(llave_abre)){
             coincidir(llave_abre);
-            Declaracion();
+            Declaracion(nodo1);
             if(preanalisis.equals(llave_cierra)){
                 coincidir(llave_cierra);
+                stmtblock=new StmtBlock(nodo1);
+                return stmtblock;
             }
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba una LLAVE ABRIENDO.");
+            return null;
         }
+        return stmtblock;
     }
 
-    /*void Block_decl(){
-        if(hayErrores) return;
-        if(preanalisis.equals(fun) || preanalisis.equals(var) || preanalisis.equals(para) || preanalisis.equals(si) || preanalisis.equals(imprimir) || preanalisis.equals(para) || preanalisis.equals(regresa) || preanalisis.equals(mientras) || preanalisis.equals(llave_abre) || preanalisis.equals(neg_logica) || preanalisis.equals(resta)){
-            Declaracion();
-            Block_decl();
-        } else { //EPSILON
-
-        }
-
-    }*/
 
     /*----------------------------------------------------------------*/
 /*----------------------Expresiones--------------------------------*/
@@ -565,64 +576,80 @@ public class ASDR implements Parser {
 
 /*----------------------------------------------------------------*/
 /*----------------------Otras--------------------------------*/
-void Function(){
-    if(hayErrores) return;
+Statement Function(Node node){
+    Node node1=new Node("");
+    StmtFunction functionDecl = null;
+    if(hayErrores) return null;
     if(preanalisis.equals(identificador)){
+        Token name = preanalisis;
         coincidir(identificador);
         if(preanalisis.equals(parentesis_abre)){
             coincidir(parentesis_abre);
-            Parameters_opc();
+            List<Token> params = Parameters_opc(node1);
             if(preanalisis.equals(parentesis_cierra)){
                 coincidir(parentesis_cierra);
-                Block();
+                Statement body = Block(node1);
+                functionDecl = new StmtFunction(name, params, (StmtBlock) body);
+                node1=new Node(functionDecl.imprimir());
+                node.addChild(node1);
+                return functionDecl;
             }
         }
     } else {
         hayErrores = true;
         System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificiador'.");
+        return null;
     }
+    return functionDecl;
 }
 
     void Functions(){
         if(hayErrores) return;
         if(preanalisis.equals(identificador)){
-            Fun_decl();
-            Functions();
+           /* Fun_decl();
+            Functions();*/
         } else { //EPSILON
 
         }
 
     }
 
-    void Parameters_opc(){
-        if(hayErrores) return;
+    List<Token>  Parameters_opc(Node node){
+        Node node1=new Node("");
+        List<Token> params = new ArrayList<>();
+        if(hayErrores) return params;;
         if(preanalisis.equals(identificador)){
-            coincidir(identificador);
-            Parameters();
+            //coincidir(identificador);
+            Parameters(params);
         } else { //EPSILON
-
+            return params;
         }
-
+        return params;
     }
 
-    void Parameters(){
+    void Parameters(List<Token> params){
         if(hayErrores) return;
         if(preanalisis.equals(identificador)){
+            Token paramToken = preanalisis;
             coincidir(identificador);
-            Parameters_2();
+            params.add(paramToken);
+            Parameters_2(params);
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificador'.");
         }
     }
 
-    void Parameters_2(){
+    void Parameters_2(List<Token> parametros){
         if(hayErrores) return;
         if(preanalisis.equals(coma)){
             coincidir(coma);
             if(preanalisis.equals(identificador)){
+                Token name = preanalisis;
                 coincidir(identificador);
-                Parameters_2();
+                parametros.add(name);
+
+                Parameters_2(parametros);
             }
         } else { //EPSILON
 
