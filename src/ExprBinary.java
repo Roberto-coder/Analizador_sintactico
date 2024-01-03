@@ -12,17 +12,18 @@ public class ExprBinary extends Expression{
     }
     @Override
     public String toString() {
-        return "(" + left.toString() + " " + operator.lexema + " " + right.toString() + ")";
+        return "Expresion Binaria: (Left->" + left.toString() + " Operator->" + operator.lexema + " Right->" + right.toString() + ")";
     }
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "ExprBinary");
-        System.out.println(indentation + "\tLeft:");
-        left.imprimir(indentation + "\t\t");
+        System.out.println(indentation +"Expresion Binaria");
+        System.out.print(indentation + "\tLeft:");
+        left.imprimir(indentation + "");
         System.out.println(indentation + "\tOperator: " + operator.lexema);
         System.out.println(indentation + "\tRight:");
         right.imprimir(indentation + "\t\t");
+        //System.out.println(indentation+"\t"+ '└'+this.toString());
     }
 
 }

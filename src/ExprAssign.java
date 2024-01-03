@@ -10,12 +10,13 @@ public class ExprAssign extends Expression{
     }
     @Override
     public String toString() {
-        return "(= " + name.lexema + " " + value.toString() + ")";
+        return "Asignacion de Variable: (Nombre de la variable-> " + name.lexema + " Valor->" + value.toString() + ")";
     }
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "ExprAssign: " + name.lexema);
-        value.imprimir(indentation + "\t");
+        System.out.println(indentation + "Asigna Expresion: " + name.lexema);
+        value.imprimir(indentation +"\t");
+        //System.out.println(indentation+"\t"+ '└'+this.toString());
     }
 }

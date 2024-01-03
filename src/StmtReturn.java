@@ -5,6 +5,16 @@ public class StmtReturn extends Statement {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        if (value != null) {
+            return "Return(Valor->"+value.toString()+")";
+
+        }else{
+            return "Return(Valor->Null)";
+        }
+
+    }
 
     @Override
     public void imprimir(String indentation) {
@@ -12,5 +22,6 @@ public class StmtReturn extends Statement {
         if (value != null) {
             value.imprimir(indentation + "\t");
         }
+        //System.out.println(indentation+"\t"+'└'+this.toString());
     }
 }

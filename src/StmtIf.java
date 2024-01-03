@@ -9,7 +9,7 @@ public class StmtIf extends Statement {
         this.elseBranch = elseBranch;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
@@ -22,6 +22,15 @@ public class StmtIf extends Statement {
 
         builder.append(")");
         return builder.toString();
+    }*/
+
+    public String toString() {
+        if (elseBranch != null) {
+            return "Declara IF:(Condicion->"+condition.toString()+" THEN-> "+thenBranch.toString()+" ELSE-> "+elseBranch.toString();
+        }else{
+            return "Declara IF:(Condicion->"+condition.toString()+" THEN-> "+thenBranch.toString()+" ELSE->Vacio";
+        }
+
     }
 
     @Override
@@ -37,5 +46,6 @@ public class StmtIf extends Statement {
             System.out.println(indentation + "\tElse Branch:");
             elseBranch.imprimir(indentation + "\t\t");
         }
+        //System.out.println(indentation+"\t"+'└'+this.toString());
     }
 }

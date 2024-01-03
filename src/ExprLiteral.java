@@ -8,16 +8,18 @@ class ExprLiteral extends Expression {
     @Override
     public String toString() {
         if (value instanceof String) {
-            // Asegúrate de que el valor no contenga comillas
-            return (String) value;
+            // Contiene comillas
+            return "Expression para literales:(Valor: "+(String) value+")";
         } else {
-            // Usa String.valueOf para convertir otros objetos a una cadena
-            return String.valueOf(value);
+            // convertir otros objetos a una cadena
+            return "Expression para literales:(Valor: "+String.valueOf(value)+")";
         }
     }
 
     @Override
     public void imprimir(String indentation) {
+
         System.out.println(indentation + "ExprLiteral: " + value);
+        //System.out.println(indentation+ "\t"+'└'+this.toString());
     }
 }

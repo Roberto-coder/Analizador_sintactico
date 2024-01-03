@@ -751,6 +751,7 @@ Statement Function(){
         if(preanalisis.equals(identificador)){
             Token paramToken = preanalisis;
             coincidir(identificador);
+            params.add(paramToken);
             Parameters_2(params);
         } else {
             hayErrores = true;

@@ -14,7 +14,7 @@ public class StmtBlock extends Statement{
         for (Statement statement : statements) {
             sb.append(statement.toString());
         }
-        return sb.toString();
+        return "Block:(Argumentos->"+sb.toString()+")";
     }
 
     @Override
@@ -23,5 +23,6 @@ public class StmtBlock extends Statement{
         for (Statement stmt : statements) {
             stmt.imprimir(indentation + "\t");
         }
+        //System.out.println(indentation+"\t"+'└'+this.toString());
     }
 }

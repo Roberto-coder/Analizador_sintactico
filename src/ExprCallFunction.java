@@ -34,7 +34,7 @@ public class ExprCallFunction extends Expression{
         }
 
         // Devolver la representación completa de la llamada a función
-        return calleeStr + "(" + argsStr.toString() + ")";
+        return "Expresion: Llamar a la Funcion:"+"Nombre->"+calleeStr + " Argumentos-> (" + argsStr.toString() + ")";
     }
 
     @Override
@@ -47,5 +47,6 @@ public class ExprCallFunction extends Expression{
         for (Expression arg : arguments) {
             arg.imprimir(indentation + "\t\t");
         }
+        //System.out.println(indentation+ "\t"+'└'+this.toString());
     }
 }

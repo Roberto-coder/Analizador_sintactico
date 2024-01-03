@@ -13,6 +13,10 @@ public class StmtFunction extends Statement {
         this.body = body;
     }
 
+    public String toString() {
+
+        return "Declara Funcion:(Nombre->"+name.toString()+" Parametros->"+params.toString()+" Cuerpo->"+body.toString()+")";
+    }
 
     @Override
     public void imprimir(String indentation) {
@@ -27,5 +31,6 @@ public class StmtFunction extends Statement {
         // Imprimir el cuerpo de la función
         System.out.println(indentation + "\tBody:");
         body.imprimir(indentation + "\t\t");
+        //System.out.println(indentation+"\t"+'└'+this.toString());
     }
 }

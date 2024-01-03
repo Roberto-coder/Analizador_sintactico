@@ -7,6 +7,10 @@ public class StmtLoop extends Statement {
         this.body = body;
     }
 
+    public String toString() {
+
+        return "Expression:(Bucle->"+condition.toString()+" Cuerpo->"+body.toString()+")";
+    }
 
     @Override
     public void imprimir(String indentation) {
@@ -16,5 +20,6 @@ public class StmtLoop extends Statement {
 
         System.out.println(indentation + "\tBody:");
         body.imprimir(indentation + "\t\t");
+        //System.out.println(indentation+"\t"+'└'+this.toString());
     }
 }

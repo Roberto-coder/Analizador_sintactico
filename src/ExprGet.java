@@ -8,6 +8,10 @@ public class ExprGet extends Expression{
         this.object = object;
         this.name = name;
     }
+    @Override
+    public String toString() {
+        return "Expression Get: Nombre de la variable: " + name.lexema + " Objeto:" + object.toString() + ")";
+    }
 
     @Override
     public void imprimir(String indentation) {
@@ -16,5 +20,6 @@ public class ExprGet extends Expression{
         object.imprimir(indentation + "\t\t");
 
         System.out.println(indentation + "\tName: " + name.lexema);
+        //System.out.println(indentation+ "\t"+'└'+this.toString());
     }
 }
