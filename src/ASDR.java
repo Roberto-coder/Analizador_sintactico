@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 public class ASDR implements Parser {
 
     private int i = 0;
@@ -46,17 +48,21 @@ public class ASDR implements Parser {
     private final Token llave_cierra = new Token(TipoToken.RIGHT_BRACE, "}");
     private final Token finCadena = new Token(TipoToken.EOF, "");
 
+    private List<Statement> nodos;
+
     public ASDR(List<Token> tokens) {
         this.tokens = tokens;
         preanalisis = this.tokens.get(i);
+        nodos = new ArrayList<>();
     }
 
     /*----------------------PROGRAM--------------------------------*/
     public boolean parse() {
-        Program();
+        nodos=Program();
 
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
             System.out.println("Consulta correcta");
+            printTree();
             return true;
         } else {
             System.out.println("Se encontraron errores");
@@ -65,17 +71,18 @@ public class ASDR implements Parser {
     }
 
 
-    public void Program() {
+    public List<Statement> Program() {
+        nodos.clear();
         preanalisis = tokens.get(i);
 
-        Declaracion();
+        Declaracion(nodos);
 
         if (!hayErrores && !preanalisis.equals(finCadena)) {
             System.out.println("Error en la posición " + preanalisis.posicion + ". No se esperaba el token " + preanalisis.tipo);
         } else if (!hayErrores && preanalisis.equals(finCadena)) {
             System.out.println("Consulta válida");
         }
-
+        return nodos;
     }
 
     void coincidir(Token t) { //FUNCION QUE COMPARA LOS TOKENS, con parametro de un token(match)
@@ -92,17 +99,20 @@ public class ASDR implements Parser {
     /*--------------------------------------------------------------*/
     /*----------------------DECLARACIONES--------------------------------*/
 
-    void Declaracion() {
+    void Declaracion(List<Statement> nodos) {
         if (hayErrores) return;
         if (preanalisis.equals(fun)) {
-            Fun_decl();
-            Declaracion();
+            Statement funDecl=Fun_decl();
+            nodos.add(funDecl);
+            Declaracion(nodos);
         } else if (preanalisis.equals(var)) {
-            Var_decl();
-            Declaracion();
+            Statement varDecl = Var_decl();
+            nodos.add(varDecl);
+            Declaracion(nodos);
         }  else if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(para) || preanalisis.equals(si) || preanalisis.equals(imprimir) || preanalisis.equals(regresa) || preanalisis.equals(mientras) || preanalisis.equals(llave_abre) ||  preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre)){
-            Statement();
-            Declaracion();
+            Statement stmt = Statement();
+            nodos.add(stmt);
+            Declaracion(nodos);
         }  else { //EPSILON
 
         }
@@ -114,233 +124,294 @@ public class ASDR implements Parser {
         }*/
     }
 
-    void Fun_decl() {
-        if (hayErrores) return;
+    Statement Fun_decl() {
+        if (hayErrores) return null;
         if (preanalisis.equals(fun)) {
             coincidir(fun);
-            Function();
+            Statement funDecl=Function();
+            return funDecl;
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'fun'.");
+            return null;
         }
     }
 
-    void Var_decl() {
-        if (hayErrores) return;
+    Statement Var_decl() {
+        if (hayErrores) return null;
         if (preanalisis.equals(var)) {
             coincidir(var);
             if (preanalisis.equals(identificador)) {
+                Token name = preanalisis;
                 coincidir(identificador);
-                Var_init();
+                Expression initializer = null;
+                if (preanalisis.tipo == TipoToken.EQUAL) {
+                    initializer = Var_init(initializer);
+                }
                 if (preanalisis.equals(puntoycoma)) {
                     coincidir(puntoycoma);
+                    return new StmtVar(name, initializer);
                 }
             }
+
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba una 'var'.");
+            return null;
         }
+        return null;
     }
 
-    void Var_init() {
-        if (hayErrores) return;
+    Expression Var_init(Expression initializer) {
+        if (hayErrores) return null;
         if (preanalisis.equals(igual)) {
             coincidir(igual);
-            Expression();
+            initializer =Expression();
         } else { //EPSILON
 
         }
-
+        return initializer;
     }
 
 
 /*---------------------------------------------------------------------*/
 /*----------------------SENTENCIAS--------------------------------*/
-    void Statement(){
-        if(hayErrores) return;
+Statement Statement(){
+        if(hayErrores) return null;
         if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) ){
-            Expr_stmt();
+            Statement expr = Expr_stmt();
+            return expr;
         } else if(preanalisis.equals(para)){
-            For_stmt();
+            Statement forStmt = For_stmt();
+            return forStmt;
         } else if(preanalisis.equals(si)){
-            If_stmt();
+            Statement if1 = If_stmt();
+            return if1;
         }else if(preanalisis.equals(imprimir)){
-            Print_stmt();
+            Statement print = Print_stmt();
+            return print;
         } else if(preanalisis.equals(regresa)){
-            Return_stmt();
+            Statement return1 = Return_stmt();
+            return return1;
         } else if(preanalisis.equals(mientras)){
-            While_stmt();
+            Statement while1 = While_stmt();
+            return while1;
         } else if(preanalisis.equals(llave_abre)){
-            Block();
+            Statement block = Block();
+            return block;
         }
+        return null;
     }
-    void Expr_stmt(){
-        if(hayErrores) return;
-        Expression();
+    Statement Expr_stmt(){
+        if(hayErrores) return null;
+        Expression expr =Expression();
         if(preanalisis.equals(puntoycoma)){
             coincidir(puntoycoma);
+            return new StmtExpression(expr);
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba ';'.");
         }
 
-        //************************
+        return null;
     }
-    void For_stmt(){
-        if(hayErrores) return;
+    Statement For_stmt(){
+        Statement body=null;
+        if(hayErrores) return null;
         if(preanalisis.equals(para)){
             coincidir(para);
             if(preanalisis.equals(parentesis_abre)){
                 coincidir(parentesis_abre);
-                For_stmt_1();
-                For_stmt_2();
-                For_stmt_3();
+                Statement initializer = For_stmt_1();
+                Expression condition = For_stmt_2();
+                Expression increment = For_stmt_3();
                 if(preanalisis.equals(parentesis_cierra)){
                     coincidir(parentesis_cierra);
-                    Statement();
+                    body = Statement();
                 }
+
+                if (increment != null) {
+                    body = new StmtBlock(Arrays.asList(body, new StmtExpression(increment)));
+                }
+
+                if (condition == null) {
+                    condition = new ExprLiteral(true);
+                }
+
+                body = new StmtLoop(condition, body);
+
+                if (initializer != null) {
+                    body = new StmtBlock(Arrays.asList(initializer, body));
+                }
+
             }
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'for'.");
         }
+        return body;
     }
-    void For_stmt_1(){
-        if(hayErrores) return;
+    Statement For_stmt_1(){
+        if(hayErrores) return null;
         if(preanalisis.equals(var)){
-            Var_decl();
+            return Var_decl();
         } else if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo)|| preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) ){ //************************************
-            Expr_stmt();
+            Statement stmt =Expr_stmt();
+            return stmt;
         } else if(preanalisis.equals(puntoycoma)){
             coincidir(puntoycoma);
+            return null;
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'var', una 'expresion' ó ';'.");
+            return null;
         }
 
     }
 
-    void For_stmt_2(){
-        if(hayErrores) return;
+    Expression For_stmt_2(){
+        Expression expr;
+        if(hayErrores) return null;
         if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre)){ //********************************************
-            Expression();
+            expr = Expression();
             if(preanalisis.equals(puntoycoma)){
                 coincidir(puntoycoma);
+                return expr;
             }
         } else if(preanalisis.equals(puntoycoma)){
             coincidir(puntoycoma);
+            return null;
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'for' o ';'.");
         }
+        return null;
     }
 
-    void For_stmt_3(){
-        if(hayErrores) return;
+    Expression For_stmt_3(){
+        if(hayErrores) return null;
         if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre)){
-            Expression();
+            return Expression();
         } else { //EPSILON
 
         }
-
+        return null;
     }
 
-    void If_stmt(){
-        if(hayErrores) return;
+    Statement If_stmt(){
+        if(hayErrores) return null;
         if(preanalisis.equals(si)){
             coincidir(si);
             if(preanalisis.equals(parentesis_abre)){
                 coincidir(parentesis_abre);
-                Expression();
+                Expression condition = Expression();
                 if(preanalisis.equals(parentesis_cierra)){
                     coincidir(parentesis_cierra);
-                    Statement();
-                    Else_statement();
+                    Statement thenBranch =Statement();
+                    Statement elseBranch = Else_statement();
+                    return new StmtIf(condition, thenBranch, elseBranch);
                 }
             }
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'if'.");
         }
+        return null;
     }
-    void Else_statement(){
-        if(hayErrores) return;
+    Statement Else_statement(){
+        if(hayErrores) return null;
         if(preanalisis.equals(de_otro_modo)){
             coincidir(de_otro_modo);
-            Statement();
+            return Statement();
         } else { //EPSILON
 
         }
-        //**
+
+        return null;
     }
 
-    void Print_stmt(){
-        if(hayErrores) return;
+    Statement Print_stmt(){
+        if(hayErrores) return null;
         if(preanalisis.equals(imprimir)){
             coincidir(imprimir);
-            Expression();
+            Expression expr = Expression();
             if(preanalisis.equals(puntoycoma)){
                 coincidir(puntoycoma);
+                return new StmtPrint(expr);
             }
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'print'.");
         }
+        return null;
     }
 
-    void Return_stmt(){
-        if(hayErrores) return;
+    Statement Return_stmt(){
+        Expression expr = null;
+        if(hayErrores) return null;
         if(preanalisis.equals(regresa)){
             coincidir(regresa);
-            Return_exp_opc();
+            expr =Return_exp_opc(expr);
             if(preanalisis.equals(puntoycoma)){
                 coincidir(puntoycoma);
+                return new StmtReturn(expr);
             }
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'return'.");
+            return null;
         }
+        return null;
     }
-    void Return_exp_opc(){
-        if(hayErrores) return;
+    Expression Return_exp_opc(Expression expr){
+        if(hayErrores) return null;
         if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo) || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) ){ //*********
-            Expression();
+            expr=Expression();
+            return expr;
         } else { //EPSILON
 
         }
-
+        return expr;
     }
 
-    void While_stmt(){
-        if(hayErrores) return;
+    Statement While_stmt(){
+        if(hayErrores) return null;
         if(preanalisis.equals(mientras)){
             coincidir(mientras);
             if(preanalisis.equals(parentesis_abre)){
                 coincidir(parentesis_abre);
-                Expression();
+                Expression condition =Expression();
                 if(preanalisis.equals(parentesis_cierra)){
                     coincidir(parentesis_cierra);
-                    Statement();
+                    Statement body = Statement();
+                    return new StmtLoop(condition, body);
                 }
             }
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba WHILE.");
         }
+        return null;
     }
 
-    void Block(){
-        if(hayErrores) return;
+    Statement Block(){
+        List<Statement> nodos = new ArrayList<>();
+        StmtBlock stmtblock=new StmtBlock(nodos);
+        if(hayErrores) return null;
         if(preanalisis.equals(llave_abre)){
             coincidir(llave_abre);
-            Declaracion();
+            Declaracion(nodos);
+
             if(preanalisis.equals(llave_cierra)){
                 coincidir(llave_cierra);
+                return stmtblock;
             }
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba una LLAVE ABRIENDO.");
+            return null;
         }
+        return null;
     }
 
     /*void Block_decl(){
@@ -356,231 +427,300 @@ public class ASDR implements Parser {
 
     /*----------------------------------------------------------------*/
 /*----------------------Expresiones--------------------------------*/
-    void Expression(){
-        if(hayErrores) return;
-        Assignment();
+    Expression Expression(){
+        if(hayErrores) return null;
+        Expression expr =Assignment();
+        return expr;
     }
 
-    void Assignment(){
-        if(hayErrores) return;
-        Logic_or();
-        Assignment_opc();
+    Expression Assignment(){
+        if(hayErrores) return null;
+        Expression expr = Logic_or();
+        expr = Assignment_opc(expr);
+        return expr;
     }
 
-    void Assignment_opc(){
-        if(hayErrores) return;
+    Expression Assignment_opc(Expression expr){
+        if(hayErrores) return null;
         if(preanalisis.equals(igual)){
+            Token operadorL = preanalisis;
             coincidir(igual);
-            Expression();
+            expr = Expression();
+            return new ExprAssign(operadorL, expr);
         } else { //EPSILON
 
         }
+        return expr;
     }
 
-    void Logic_or(){
-        if(hayErrores) return;
-        Logic_and();
-        Logic_or_2();
+    Expression Logic_or(){
+        if(hayErrores) return null;
+        Expression expr = Logic_and();
+        expr = Logic_or_2(expr);
+        return expr;
     }
 
-    void Logic_or_2(){
-        if(hayErrores) return;
+    Expression Logic_or_2(Expression expr){
+        if(hayErrores) return null;
         if(preanalisis.equals(O)){
+            Token operadorL =preanalisis;
             coincidir(O);
-            Logic_and();
-            Logic_or_2();
+            Expression expr2 =Logic_and();
+            ExprLogical expl = new ExprLogical(expr, operadorL, expr2);
+            return Logic_or_2(expl);
         } else { //EPSILON
 
         }
+        return expr;
     }
 
-    void Logic_and(){
-        if(hayErrores) return;
-        Equality();
-        Logic_and_2();
+    Expression Logic_and(){
+        if(hayErrores) return null;
+        Expression expr = Equality();
+        expr =Logic_and_2(expr);
+        return expr;
     }
 
-    void Logic_and_2(){
-        if(hayErrores) return;
+    Expression Logic_and_2(Expression expr){
+        if(hayErrores) return null;
         if(preanalisis.equals(Y)){
+            Token operadorL = preanalisis;
             coincidir(Y);
-            Equality();
-            Logic_and_2();
+            Expression expr2 = Equality();
+            ExprLogical expl = new ExprLogical(expr, operadorL, expr2);
+            Logic_and_2(expl);
         } else { //EPSILON
 
         }
+        return expr;
     }
 
-    void Equality(){
-        if(hayErrores) return;
-        Comparison();
-        Equality_2();
+    Expression Equality(){
+        if(hayErrores) return null;
+        Expression expr = Comparison();
+        expr = Equality_2(expr);
+        return expr;
     }
 
-    void Equality_2(){
-        if(hayErrores) return;
+    Expression Equality_2(Expression expr){
+        if(hayErrores) return null;
         if(preanalisis.equals(diferente_de)){
+            Token operador = preanalisis;
             coincidir(diferente_de);
-            Comparison();
-            Equality_2();
+            Expression expr2 = Comparison();
+            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            return Equality_2(expb);
         } else if(preanalisis.equals(igual_a)){
+            Token operador = preanalisis;
             coincidir(igual_a);
-            Comparison();
-            Equality_2();
+            Expression expr2 =Comparison();
+            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            return Equality_2(expb);
         } else { //EPSILON
 
         }
+        return expr;
     }
 
-    void Comparison(){
-        if(hayErrores) return;
-        Term();
-        Comparison_2();
+    Expression Comparison(){
+        if(hayErrores) return null;
+        Expression expr = Term();
+        expr = Comparison_2(expr);
+        return expr;
     }
 
-    void Comparison_2(){
-        if(hayErrores) return;
+    Expression Comparison_2(Expression expr){
+        if(hayErrores) return null;
         if(preanalisis.equals(mayor_a)){
+            Token operador = preanalisis;
             coincidir(mayor_a);
-            Term();
-            Comparison_2();
+            Expression expr2 = Term();
+            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            return Comparison_2(expb);
         } else if(preanalisis.equals(mayor_iguala)){
+            Token operador = preanalisis;
             coincidir(mayor_iguala);
-            Term();
-            Comparison_2();
+            Expression expr2 = Term();
+            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            return Comparison_2(expb);
         } else if(preanalisis.equals(menor_a)){
+            Token operador = preanalisis;
             coincidir(menor_a);
-            Term();
-            Comparison_2();
+            Expression expr2 = Term();
+            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            return Comparison_2(expb);
         } else if(preanalisis.equals(menor_iguala)){
+            Token operador = preanalisis;
             coincidir(menor_iguala);
-            Term();
-            Comparison_2();
+            Expression expr2 = Term();
+            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            return Comparison_2(expb);
         } else { //EPSILON
 
         }
+        return expr;
     }
 
-    void Term(){
-        if(hayErrores) return;
-        Factor();
-        Term_2();
+    Expression Term(){
+        if(hayErrores) return null;
+        Expression expr = Factor();
+        expr = Term_2(expr);
+        return expr;
     }
 
-    void Term_2(){
-        if(hayErrores) return;
+    Expression Term_2(Expression expr){
+        if(hayErrores) return null;
         if(preanalisis.equals(resta)){
+            Token operador = preanalisis;
             coincidir(resta);
-            Factor();
-            Term_2();
+            Expression expr2=Factor();
+            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            return Term_2(expb);
+            //return FACTOR_2(expb);
         } else if(preanalisis.equals(suma)){
+            Token operador = preanalisis;
             coincidir(suma);
-            Factor();
-            Term_2();
+            Expression expr2=Factor();
+            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            return Term_2(expb);
+            //return FACTOR_2(expb);
         } else { //EPSILON
 
         }
+        return expr;
     }
 
-    void Factor(){
-        if(hayErrores) return;
-        Unary();
-        Factor_2();
+    Expression Factor(){
+        if(hayErrores) return null;
+        Expression expr = Unary();
+        expr = Factor_2(expr);
+        return expr;
     }
 
-    void Factor_2(){
-        if(hayErrores) return;
+    Expression Factor_2(Expression expr){
+        if(hayErrores) return null;
         if(preanalisis.equals(division)){
+            Token operador = preanalisis;
             coincidir(division);
-            Unary();
-            Factor_2();
+            Expression expr2 = Unary();
+            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            return Factor_2(expb);
         } else if(preanalisis.equals(multiplicacion)){
+            Token operador = preanalisis;
             coincidir(multiplicacion);
-            Unary();
-            Factor_2();
+            Expression expr2 = Unary();
+            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            return Factor_2(expb);
         } else { //EPSILON
 
         }
+        return expr;
     }
 
-    void Unary(){
-        if(hayErrores) return;
+    Expression Unary(){
+        if(hayErrores) return null;
         if(preanalisis.equals(neg_logica)){
+            Token operador = preanalisis;
             coincidir(neg_logica);
-            Unary();
+            Expression expr = Unary();
+            return new ExprUnary(operador, expr);
         } else if(preanalisis.equals(resta)){
+            Token operador = preanalisis;
             coincidir(resta);
-            Unary();
+            Expression expr = Unary();
+            return new ExprUnary(operador, expr);
         } else {
-            Call();
+            return Call();
         }
     }
 
-    void Call(){
-        if(hayErrores) return;
-        Primary();
-        Call_2();
+    Expression Call(){
+        if(hayErrores) return null;
+        Expression expr = Primary();
+        expr = Call_2(expr);
+        return expr;
     }
 
-    void Call_2(){
-        if(hayErrores) return;
+    Expression Call_2(Expression expr){
+        if(hayErrores) return null;
         if(preanalisis.equals(parentesis_abre)){
             coincidir(parentesis_abre);
-            Arguments_opc();
+            List<Expression> lstArguments =Arguments_opc();
             if(preanalisis.equals(parentesis_cierra)){
                 coincidir(parentesis_cierra);
+                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);
+                return Call_2(ecf);
             }
         } else { //EPSILON
 
         }
+        return expr;
     }
 
-    void Primary(){
-        if(hayErrores) return;
+    Expression Primary(){
+        if(hayErrores) return null;
         if(preanalisis.equals(verdadero)){
             coincidir(verdadero);
+            return new ExprLiteral(true);
         } else if(preanalisis.equals(falso)){
             coincidir(falso);
+            return new ExprLiteral(false);
         } else if(preanalisis.equals(nulo)){
             coincidir(nulo);
+            return new ExprLiteral(null);
         } else if(preanalisis.equals(numero)){
+            Token numero = preanalisis;
             coincidir(numero);
+            return new ExprLiteral(numero.literal);
         } else if(preanalisis.equals(cadena)){
+            Token cadena = preanalisis;
             coincidir(cadena);
+            return new ExprLiteral(cadena.literal);
         } else if(preanalisis.equals(identificador)){
+            Token id = preanalisis;
             coincidir(identificador);
+            return new ExprVariable(id);
         } else if(preanalisis.equals(parentesis_abre)){
             coincidir(parentesis_abre);
-            Expression();
+            Expression expr = Expression();
             if(preanalisis.equals(parentesis_cierra)){
                 coincidir(parentesis_cierra);
+                return new ExprGrouping(expr);
             }
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba algun PRIMARY.");
+            return null;
         }
+        return null;
     }
 
 
 
 /*----------------------------------------------------------------*/
 /*----------------------Otras--------------------------------*/
-void Function(){
-    if(hayErrores) return;
+Statement Function(){
+    StmtFunction functionDecl = null;
+    if(hayErrores) return null;
     if(preanalisis.equals(identificador)){
+        Token name = preanalisis;
         coincidir(identificador);
         if(preanalisis.equals(parentesis_abre)){
             coincidir(parentesis_abre);
-            Parameters_opc();
+            List<Token> params = Parameters_opc();
             if(preanalisis.equals(parentesis_cierra)){
                 coincidir(parentesis_cierra);
-                Block();
+                Statement body = Block();
+                functionDecl = new StmtFunction(name, params, (StmtBlock) body);
+                return functionDecl;
             }
         }
     } else {
         hayErrores = true;
         System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificiador'.");
+        return null;
     }
+    return functionDecl;
 }
 
     void Functions(){
@@ -594,35 +734,40 @@ void Function(){
 
     }
 
-    void Parameters_opc(){
-        if(hayErrores) return;
+    List<Token> Parameters_opc(){
+        List<Token> params = new ArrayList<>();
+        if(hayErrores) return null;
         if(preanalisis.equals(identificador)){
-            coincidir(identificador);
-            Parameters();
+            //coincidir(identificador);
+            Parameters(params);
         } else { //EPSILON
 
         }
-
+        return params;
     }
 
-    void Parameters(){
+    void Parameters(List<Token> params){
         if(hayErrores) return;
         if(preanalisis.equals(identificador)){
+            Token paramToken = preanalisis;
             coincidir(identificador);
-            Parameters_2();
+            params.add(paramToken);
+            Parameters_2(params);
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificador'.");
         }
     }
 
-    void Parameters_2(){
+    void Parameters_2(List<Token> parametros){
         if(hayErrores) return;
         if(preanalisis.equals(coma)){
             coincidir(coma);
             if(preanalisis.equals(identificador)){
+                Token name = preanalisis;
                 coincidir(identificador);
-                Parameters_2();
+                parametros.add(name);
+                Parameters_2(parametros);
             }
         } else { //EPSILON
 
@@ -630,15 +775,16 @@ void Function(){
 
     }
 
-    void Arguments_opc(){
-        if(hayErrores) return;
+    List<Expression> Arguments_opc(){
+        List<Expression> arguments = new ArrayList<>();
+        if(hayErrores) return null;
         if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo)  || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) ){
-            Expression();
-            Arguments();
+            arguments.add(Expression());
+            Arguments(arguments);
         } else { //EPSILON
 
         }
-
+        return arguments;
     }
 
     /*void Arguments(){
@@ -648,25 +794,28 @@ void Function(){
 
     }*/
 
-    void Arguments(){
+    void Arguments(List<Expression> arguments){
         if(hayErrores) return;
-        if(preanalisis.equals(coma)){
+        while (preanalisis.equals(coma)) {
             coincidir(coma);
-            Expression();
-            Arguments();
-        } else { //EPSILON
-
+            arguments.add(Expression());
+            //Arguments();
         }
+        /*else { //EPSILON
+
+        }*/
 
     }
 
     //AQUI TERMINA TODA LA GRAMATICA DEL PROYECTO
 
 
-
-
-
 /*----------------------------------------------------------------*/
 
+    public void printTree() {
+        for (Statement stmt : nodos) {
+            stmt.imprimir("\t");
+        }
+    }
 
 }
