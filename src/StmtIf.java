@@ -35,15 +35,15 @@ public class StmtIf extends Statement {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "StmtIf");
-        System.out.println(indentation + "\tCondition:");
+        System.out.println(indentation + "└>StatementIf");
+        System.out.println(indentation + "\tCondicion:");
         condition.imprimir(indentation + "\t\t");
 
-        System.out.println(indentation + "\tThen Branch:");
+        System.out.println(indentation + "\tThen:");
         thenBranch.imprimir(indentation + "\t\t");
 
         if (elseBranch != null) {
-            System.out.println(indentation + "\tElse Branch:");
+            System.out.println(indentation + "\tElse:");
             elseBranch.imprimir(indentation + "\t\t");
         }
         //System.out.println(indentation+"\t"+'└'+this.toString());

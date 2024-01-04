@@ -39,13 +39,13 @@ public class ExprCallFunction extends Expression{
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "ExprCallFunction");
-        System.out.println(indentation + "\tCallee:");
+        System.out.println(indentation + "Llamar funcion");
+        System.out.println(indentation + "\tLlamar:");
         callee.imprimir(indentation + "\t\t");
 
-        System.out.println(indentation + "\tArguments:");
+        System.out.println(indentation + "\tArgumentos:");
         for (Expression arg : arguments) {
-            arg.imprimir(indentation + "\t\t");
+            arg.imprimir(indentation + "\t\t└>");
         }
         //System.out.println(indentation+ "\t"+'└'+this.toString());
     }

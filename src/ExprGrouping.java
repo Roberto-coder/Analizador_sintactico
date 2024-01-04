@@ -12,8 +12,8 @@ public class ExprGrouping extends Expression {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "ExprGrouping");
-        expression.imprimir(indentation + "\t");
+        System.out.println(indentation + "ExpressionGrouping");
+        expression.imprimir(indentation + "\t└>");
         //System.out.println(indentation + "\t"+ '└'+this.toString());
     }
 }

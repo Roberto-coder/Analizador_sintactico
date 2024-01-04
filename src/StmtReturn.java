@@ -18,10 +18,13 @@ public class StmtReturn extends Statement {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "StmtReturn");
+        System.out.println(indentation + "└>StatementReturn");
         if (value != null) {
             value.imprimir(indentation + "\t");
+        }else {
+            value.imprimir(indentation + "\t"+" return vacio");
         }
+
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }
 }

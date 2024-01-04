@@ -15,7 +15,7 @@ class ExprVariable extends Expression {
     @Override
     public void imprimir(String indentation) {
 
-        System.out.println(indentation + "ExprVariable: " + name.lexema);
+        System.out.println(indentation + "└>ExpressionVariable: " + name.lexema);
 
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }

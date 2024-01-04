@@ -16,10 +16,10 @@ public class ExprGet extends Expression{
     @Override
     public void imprimir(String indentation) {
         System.out.println(indentation + "ExprGet");
-        System.out.println(indentation + "\tObject:");
+        System.out.println(indentation + "\tObjeto:");
         object.imprimir(indentation + "\t\t");
 
-        System.out.println(indentation + "\tName: " + name.lexema);
+        System.out.println(indentation + "\tNombre: " + name.lexema);
         //System.out.println(indentation+ "\t"+'└'+this.toString());
     }
 }

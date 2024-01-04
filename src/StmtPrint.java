@@ -12,8 +12,9 @@ public class StmtPrint extends Statement {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "StmtPrint");
-        expression.imprimir(indentation + "\t");
+        System.out.println(indentation + "└>StatementPrint");
+        expression.imprimir(indentation + "\texpression");
+
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }
 }

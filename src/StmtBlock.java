@@ -19,9 +19,9 @@ public class StmtBlock extends Statement{
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "StmtBlock");
+        System.out.println(indentation + "StatementBlock");
         for (Statement stmt : statements) {
-            stmt.imprimir(indentation + "\t");
+            stmt.imprimir(indentation + "\t└>");
         }
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }

@@ -14,11 +14,11 @@ public class StmtLoop extends Statement {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "StmtLoop");
-        System.out.println(indentation + "\tCondition:");
+        System.out.println(indentation + "└>StatementLoop");
+        System.out.println(indentation + "\tCondicion:");
         condition.imprimir(indentation + "\t\t");
 
-        System.out.println(indentation + "\tBody:");
+        System.out.println(indentation + "\tCuerpo:");
         body.imprimir(indentation + "\t\t");
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }

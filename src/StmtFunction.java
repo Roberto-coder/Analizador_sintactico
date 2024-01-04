@@ -20,17 +20,17 @@ public class StmtFunction extends Statement {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "StmtFunction: " + name.lexema);
+        System.out.println(indentation + "StatementFunction: " + name.lexema);
 
         // Imprimir los parámetros
-        System.out.println(indentation + "\tParameters:");
+        System.out.println(indentation + "\tParametros:");
         for (Token param : params) {
             System.out.println(indentation + "\t\t" + param.lexema);
         }
 
         // Imprimir el cuerpo de la función
-        System.out.println(indentation + "\tBody:");
-        body.imprimir(indentation + "\t\t");
+        System.out.println(indentation + "\tCuerpo:");
+        body.imprimir(indentation + "\t\t└>");
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }
 }

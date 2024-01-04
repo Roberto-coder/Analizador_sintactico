@@ -20,12 +20,13 @@ public class StmtVar extends Statement {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.print(indentation + "StmtVar: " + name.lexema);
+        System.out.print(indentation + "└>StatementVar: ");
+        System.out.print(indentation + "Nombre de la variable " + name.lexema);
         if (initializer != null) {
-            System.out.print(" = ");
+            System.out.print(" igual a ");
             initializer.imprimir(""); // Sin indentación adicional para el inicializador
         }
-        System.out.println(";");
+        System.out.print(";");
         //System.out.println(indentation+"\t"+'└'+this.toString());
 
     }

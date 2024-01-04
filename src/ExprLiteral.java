@@ -18,8 +18,15 @@ class ExprLiteral extends Expression {
 
     @Override
     public void imprimir(String indentation) {
+        if (value instanceof String) {
+            System.out.println(indentation + "ExpressionLiteral: " +(String)  value);
 
-        System.out.println(indentation + "ExprLiteral: " + value);
+        } else {
+            System.out.println(indentation + "ExpressionLiteral: " +String.valueOf(value));
+
+        }
+
+        //System.out.println(indentation + "ExpressionLiteral: " + value);
         //System.out.println(indentation+ "\t"+'└'+this.toString());
     }
 }
