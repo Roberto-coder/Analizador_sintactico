@@ -9,6 +9,7 @@ import java.util.List;
 public class Interprete {
 
     static boolean existenErrores = false;
+    public static TablaSimbolos tablaSimbolos;
 
     public static void main(String[] args) throws IOException {
         if(args.length > 1) {
@@ -46,15 +47,36 @@ public class Interprete {
 
     private static void ejecutar(String source) {
         try{
+            //LEXICO
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.scan();
-            /*
+
             for(Token token : tokens){
                 System.out.println(token);
-            }*/
+            }
 
+            //SINTACTICO
             Parser parser = new ASDR(tokens);
             parser.parse();
+
+            //SEMANTICO
+
+            GeneradorPosfija pfija = new GeneradorPosfija(tokens);
+            List<Token> postfija = pfija.convertir();
+
+            for (Token token : postfija){
+                System.out.println(token);
+            }
+
+            GeneradorAST gast = new GeneradorAST(postfija);
+            Arbol programa = gast.generarAST();
+            tablaSimbolos = new TablaSimbolos();
+
+            if (programa == null){
+                System.out.println("No hay arbol");
+            } else {
+                programa.recorrer(tablaSimbolos); //ejecuta el metodo recorrer
+            }
         }
         catch (Exception ex){
             ex.printStackTrace();

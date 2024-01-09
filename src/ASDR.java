@@ -71,7 +71,7 @@ public class ASDR implements Parser {
         Declaracion();
 
         if (!hayErrores && !preanalisis.equals(finCadena)) {
-            System.out.println("Error en la posición " + preanalisis.posicion + ". No se esperaba el token " + preanalisis.tipo);
+            System.out.println(" No se esperaba el token " + preanalisis.tipo);
         } else if (!hayErrores && preanalisis.equals(finCadena)) {
             System.out.println("Consulta válida");
         }
@@ -86,7 +86,7 @@ public class ASDR implements Parser {
             preanalisis = tokens.get(i);
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba un  " + t.tipo);
+            System.out.println(" Se esperaba un  " + t.tipo);
         }
     }
     /*--------------------------------------------------------------*/
@@ -121,7 +121,7 @@ public class ASDR implements Parser {
             Function();
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'fun'.");
+            System.out.println( " Se esperaba 'fun'.");
         }
     }
 
@@ -134,11 +134,14 @@ public class ASDR implements Parser {
                 Var_init();
                 if (preanalisis.equals(puntoycoma)) {
                     coincidir(puntoycoma);
+                }else {
+                    hayErrores = true;
+                    System.out.println("Error. Se esperaba 'punto y coma'.");
                 }
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba una 'var'.");
+            System.out.println( " Se esperaba una 'var'.");
         }
     }
 
@@ -181,7 +184,7 @@ public class ASDR implements Parser {
             coincidir(puntoycoma);
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba ';'.");
+            System.out.println( " Se esperaba ';'.");
         }
 
         //************************
@@ -202,7 +205,7 @@ public class ASDR implements Parser {
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'for'.");
+            System.out.println( " Se esperaba 'for'.");
         }
     }
     void For_stmt_1(){
@@ -215,7 +218,7 @@ public class ASDR implements Parser {
             coincidir(puntoycoma);
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'var', una 'expresion' ó ';'.");
+            System.out.println(" Se esperaba 'var', una 'expresion' ó ';'.");
         }
 
     }
@@ -231,7 +234,7 @@ public class ASDR implements Parser {
             coincidir(puntoycoma);
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'for' o ';'.");
+            System.out.println(" Se esperaba 'for' o ';'.");
         }
     }
 
@@ -260,7 +263,7 @@ public class ASDR implements Parser {
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'if'.");
+            System.out.println( " Se esperaba 'if'.");
         }
     }
     void Else_statement(){
@@ -281,10 +284,14 @@ public class ASDR implements Parser {
             Expression();
             if(preanalisis.equals(puntoycoma)){
                 coincidir(puntoycoma);
+            }else {
+                hayErrores = true;
+                System.out.println("Error. Se esperaba 'punto y coma'.");
             }
+
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'print'.");
+            System.out.println( " Se esperaba 'print'.");
         }
     }
 
@@ -295,10 +302,13 @@ public class ASDR implements Parser {
             Return_exp_opc();
             if(preanalisis.equals(puntoycoma)){
                 coincidir(puntoycoma);
+            }else {
+                hayErrores = true;
+                System.out.println("Error. Se esperaba 'class'.");
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'return'.");
+            System.out.println( " Se esperaba 'return'.");
         }
     }
     void Return_exp_opc(){
@@ -325,7 +335,7 @@ public class ASDR implements Parser {
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba WHILE.");
+            System.out.println(  " Se esperaba WHILE.");
         }
     }
 
@@ -336,23 +346,17 @@ public class ASDR implements Parser {
             Declaracion();
             if(preanalisis.equals(llave_cierra)){
                 coincidir(llave_cierra);
+            }else {
+                hayErrores = true;
+                System.out.println("Error. Se esperaba 'LLAVE CIERRA 2'.");
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba una LLAVE ABRIENDO.");
+            System.out.println( "Se esperaba una LLAVE ABRIENDO.");
         }
     }
 
-    /*void Block_decl(){
-        if(hayErrores) return;
-        if(preanalisis.equals(fun) || preanalisis.equals(var) || preanalisis.equals(para) || preanalisis.equals(si) || preanalisis.equals(imprimir) || preanalisis.equals(para) || preanalisis.equals(regresa) || preanalisis.equals(mientras) || preanalisis.equals(llave_abre) || preanalisis.equals(neg_logica) || preanalisis.equals(resta)){
-            Declaracion();
-            Block_decl();
-        } else { //EPSILON
 
-        }
-
-    }*/
 
     /*----------------------------------------------------------------*/
 /*----------------------Expresiones--------------------------------*/
@@ -557,7 +561,7 @@ public class ASDR implements Parser {
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba algun PRIMARY.");
+            System.out.println("Se esperaba algun PRIMARY.");
         }
     }
 
@@ -579,7 +583,7 @@ void Function(){
         }
     } else {
         hayErrores = true;
-        System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificiador'.");
+        System.out.println( " Se esperaba 'identificiador'.");
     }
 }
 
@@ -612,7 +616,7 @@ void Function(){
             Parameters_2();
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificador'.");
+            System.out.println( " Se esperaba 'identificador'.");
         }
     }
 
