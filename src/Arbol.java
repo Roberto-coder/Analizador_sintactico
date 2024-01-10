@@ -158,11 +158,83 @@ public class Arbol {
                     System.out.println("for :" + para.getValue().lexema);
                     Nodo decl = para.getHijos().get(0);
                     Nodo cond = para.getHijos().get(1);
-                    Nodo inc = para.getHijos().get(2);
+                    Nodo increment = para.getHijos().get(2);
+                    //Nodo body = para.getHijos().get(3);
+                    //Nodo izq = increment.getHijos().get(0);
+                    //Nodo der = increment.getHijos().get(1);
                     System.out.println(decl.getValue().lexema);
-                    System.out.println(decl.getValue().lexema);
-                    System.out.println(decl.getValue().lexema);
-                    //NO GENERA POSTFIJA
+                    System.out.println(cond.getValue().lexema);
+                    System.out.println(increment.getValue().lexema);
+                    //System.out.println(body.getValue().lexema);
+
+//----------------------------------DECLARACION
+                    if (decl.getValue().tipo == TipoToken.VAR){ //"="
+                        Nodo id = decl.getHijos().get(0);
+                        if (tablaSimbolos.existeIdentificador(id.getValue().lexema)) {
+                            System.out.println("Variable ya declarada: " + id.getValue().lexema);
+                        } else if (decl.getHijos().size() == 1 ){
+                            if(tablaSimbolos.existeIdentificador(id.getValue().lexema)){
+                                System.out.println("Variable ya declarada: " + id.getValue().lexema);
+                            } else {
+                                tablaSimbolos.asignar(id.getValue().lexema, null);
+                            }
+                        } else {
+                            Nodo expression = decl.getHijos().get(1);
+                            //System.out.println("valor de expresion literal: " + expresion.getValue().literal);
+                            SolverAritmetico solverAritmetico = new SolverAritmetico(expression, tablaSimbolos);
+                            Object valor = solverAritmetico.resolver();
+                            tablaSimbolos.asignar(id.getValue().lexema, valor);
+                        }
+                    } else {
+                        System.out.println("No hay var");
+                    }
+//----------------------------------CONDICION
+                    if(cond.getValue().tipo == TipoToken.AND || cond.getValue().tipo == TipoToken.OR){
+                        SolverRelacional solverCond = new SolverRelacional(cond,tablaSimbolos);
+                        Boolean resultado = (Boolean) solverCond.resolverB();
+                        System.out.println(resultado);
+                        if (resultado){ //VERDADERO
+                            System.out.println("RECORRER RAMA");
+                            //System.out.println(n.getValue().lexema);
+                            Nodo body = n; //LO QUE SIGUE DEL VERDADERO
+                            System.out.println(body.getValue().lexema);
+                            Rama ramaIf = new Rama(body,tablaSimbolos);
+                            ramaIf.recorrerR();
+                        }
+                    } else {
+                        SolverRelacional solverCondicion = new SolverRelacional(cond, tablaSimbolos);
+
+                        Boolean resultado = (Boolean) solverCondicion.resolverR();
+                        System.out.println(resultado);
+
+                        if (resultado){ //VERDADERO
+                            System.out.println("RECORRER RAMA");
+                            //System.out.println(n.getValue().lexema);
+                            Nodo body = n; //LO QUE SIGUE DEL VERDADERO
+                            System.out.println(body.getValue().lexema);
+                            Rama ramaIf = new Rama(body,tablaSimbolos);
+                            ramaIf.recorrerR();
+                        }
+                    }
+//----------------------------------INCREMENTO
+                    if (increment.getValue().tipo == TipoToken.EQUAL){ //"="
+                        Nodo id = increment.getHijos().get(0);
+                        if (tablaSimbolos.existeIdentificador(id.getValue().lexema)) {
+                            if(increment.getHijos().size() > 1 ){
+                                Nodo expression = increment.getHijos().get(1);
+                                //System.out.println("valor de expresion literal: " + expresion.getValue().literal);
+                                SolverAritmetico solverAritmetico = new SolverAritmetico(expression, tablaSimbolos);
+                                Object valor = solverAritmetico.resolver();
+                                tablaSimbolos.asignar(id.getValue().lexema, valor);
+                            }
+                        } else {
+                            System.out.println("Variable no declarada: " + id.getValue().lexema);
+                        }
+                    } else {
+                        System.out.println("No hay var");
+                    }
+
+
                     break;
                 case PRINT:
                     //System.out.println("CASO IMRPIMIR");

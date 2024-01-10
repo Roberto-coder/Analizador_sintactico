@@ -25,7 +25,7 @@ public class TablaSimbolos {
         for (Map.Entry<String, Object> entry : values.entrySet()) {
             String identificador = entry.getKey();
             Object valor = entry.getValue();
-            System.out.println(identificador + " " + valor);
+            System.out.println("<"+identificador + " , " + valor+">");
         }
     }
 }

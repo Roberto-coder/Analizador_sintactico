@@ -72,10 +72,12 @@ public class Interprete {
             Arbol programa = gast.generarAST();
             tablaSimbolos = new TablaSimbolos();
 
+
             if (programa == null){
                 System.out.println("No hay arbol");
             } else {
                 programa.recorrer(tablaSimbolos); //ejecuta el metodo recorrer
+                tablaSimbolos.imprimirValores();
             }
         }
         catch (Exception ex){

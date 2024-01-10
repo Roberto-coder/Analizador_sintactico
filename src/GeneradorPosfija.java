@@ -48,12 +48,15 @@ public class GeneradorPosfija {
                     Token temp = pila.pop();
                     postfija.add(temp);
                 }
-                if(pila.peek().tipo == TipoToken.LEFT_PAREN){
-                    pila.pop();
-                }
                 if(estructuraDeControl){
                     postfija.add(new Token(TipoToken.SEMICOLON, ";", null));
                 }
+                if(!pila.isEmpty()){
+                    if(pila.peek().tipo == TipoToken.LEFT_PAREN){
+                        pila.pop();
+                    }
+                }
+
             }
             else if(t.esOperador()){
                 while(!pila.isEmpty() && pila.peek().precedenciaMayorIgual(t)){
