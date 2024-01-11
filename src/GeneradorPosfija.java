@@ -48,14 +48,17 @@ public class GeneradorPosfija {
                     Token temp = pila.pop();
                     postfija.add(temp);
                 }
+                if(pila.peek().tipo == TipoToken.LEFT_PAREN){
+                    pila.pop();
+                }
                 if(estructuraDeControl){
                     postfija.add(new Token(TipoToken.SEMICOLON, ";", null));
                 }
-                if(!pila.isEmpty()){
+                /*if(!pila.isEmpty()){
                     if(pila.peek().tipo == TipoToken.LEFT_PAREN){
                         pila.pop();
                     }
-                }
+                }*/
 
             }
             else if(t.esOperador()){
@@ -97,6 +100,9 @@ public class GeneradorPosfija {
                     if(pilaEstructurasDeControl.isEmpty()){
                         estructuraDeControl = false;
                     }
+                }
+                if(estructuraDeControl){
+                    postfija.add(new Token(TipoToken.SEMICOLON, ";", null));
                 }
 
 

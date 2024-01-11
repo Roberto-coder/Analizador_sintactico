@@ -30,11 +30,11 @@ public class Arbol {
                 case LESS_EQUAL:
                 case EQUAL_EQUAL:
                 case BANG_EQUAL:
-                    System.out.println("CASO RELACIONALES");
+                    //System.out.println("CASO RELACIONALES");
                     //METODO DE RELACIONALES
                     SolverRelacional solverR = new SolverRelacional(n,tablaSimbolos);
                     Object res2 = solverR.resolverR();
-                    System.out.println(res2);
+                    //System.out.println(res2);
                     break;
                 //BOOLEANOS
                 case AND:
@@ -43,10 +43,10 @@ public class Arbol {
                     //METODO DE BOOLEANOS
                     SolverRelacional solverB = new SolverRelacional(n,tablaSimbolos);
                     Object res3 = solverB.resolverB();
-                    System.out.println(res3);
+                    //System.out.println(res3);
                     break;
                 case VAR:
-                    System.out.println("CASO VAR");
+                    //System.out.println("CASO VAR");
                     // Aquí va la tabla de símbolos
                     Nodo variable = n;
                     if (variable.getValue().tipo == TipoToken.VAR){ //"="
@@ -77,7 +77,7 @@ public class Arbol {
                     Nodo si = n; //if
                     //System.out.println(si.getValue().lexema);
                     Nodo condicion = si.getHijos().get(0); //operandos relacionales < <= > >= == != ó || &&
-                    System.out.println(condicion.getValue().lexema);
+                    //System.out.println(condicion.getValue().lexema);
                     //Resuelve la expresion relacional
                     /*
                     Nodo izq = condicion.getHijos().get(0);
@@ -128,45 +128,46 @@ public class Arbol {
                     }
                     break;
                 case WHILE:
-                    System.out.println("CASO WHILE");
+                    //System.out.println("CASO WHILE");
                     // resolver while
                     Nodo mientras = n;
                     //System.out.println("while: "+mientras.getValue().lexema);
-                    Nodo condicionW = mientras.getHijos().get(0);
+                    Nodo condicionW = mientras.getHijos().get(0);//>
                     //System.out.println("relacion: "+condicionW.getValue().lexema);
                     Nodo izq = condicionW.getHijos().get(0);
                     Nodo der = condicionW.getHijos().get(1);
-                    //System.out.println("izq: "+izq.getValue().lexema);
-                    //System.out.println("der: "+der.getValue().lexema);
+                    Nodo body1 = mientras.getHijos().get(2);//=
+                    Nodo bloqueWhile = mientras;
+                    /*System.out.println("izq: "+izq.getValue().lexema);
+                    System.out.println("der: "+der.getValue().lexema);
+                    System.out.println("BODY: "+body1.getValue().lexema);*/
 
                     SolverRelacional solverCondicionW = new SolverRelacional(condicionW, tablaSimbolos);
                     Boolean resultadoW = (Boolean) solverCondicionW.resolverR();
                     //System.out.println(resultadoW);
 
                     while (resultadoW){
-                        System.out.println("RECORRE RAMA");
-                        Nodo bloqueWhile = mientras;
+                        //System.out.println("RECORRE RAMA");
+
                         //System.out.println(bloqueWhile.getValue().lexema);
                         Rama ramaWhile = new Rama(bloqueWhile,tablaSimbolos);
                         ramaWhile.recorrerR();
+
+                        solverCondicionW = new SolverRelacional(condicionW, tablaSimbolos);
+                        resultadoW = (Boolean) solverCondicionW.resolverR();
+
                     }
+
                     break;
                 case FOR:
-                    System.out.println("CASO FOR");
+                    //System.out.println("CASO FOR");
                     // resolver for
                     Nodo para = n;
                     System.out.println("for :" + para.getValue().lexema);
-                    Nodo decl = para.getHijos().get(0);
-                    Nodo cond = para.getHijos().get(1);
-                    Nodo increment = para.getHijos().get(2);
-                    //Nodo body = para.getHijos().get(3);
-                    //Nodo izq = increment.getHijos().get(0);
-                    //Nodo der = increment.getHijos().get(1);
-                    System.out.println(decl.getValue().lexema);
-                    System.out.println(cond.getValue().lexema);
-                    System.out.println(increment.getValue().lexema);
-                    //System.out.println(body.getValue().lexema);
-
+                    Nodo decl = para.getHijos().get(0);//VAR
+                    Nodo cond = para.getHijos().get(1);//<
+                    Nodo increment = para.getHijos().get(2);//=
+                    Nodo blockFor = para;
 //----------------------------------DECLARACION
                     if (decl.getValue().tipo == TipoToken.VAR){ //"="
                         Nodo id = decl.getHijos().get(0);
@@ -189,51 +190,20 @@ public class Arbol {
                         System.out.println("No hay var");
                     }
 //----------------------------------CONDICION
-                    if(cond.getValue().tipo == TipoToken.AND || cond.getValue().tipo == TipoToken.OR){
-                        SolverRelacional solverCond = new SolverRelacional(cond,tablaSimbolos);
-                        Boolean resultado = (Boolean) solverCond.resolverB();
-                        System.out.println(resultado);
-                        if (resultado){ //VERDADERO
-                            System.out.println("RECORRER RAMA");
-                            //System.out.println(n.getValue().lexema);
-                            Nodo body = n; //LO QUE SIGUE DEL VERDADERO
-                            System.out.println(body.getValue().lexema);
-                            Rama ramaIf = new Rama(body,tablaSimbolos);
-                            ramaIf.recorrerR();
-                        }
-                    } else {
-                        SolverRelacional solverCondicion = new SolverRelacional(cond, tablaSimbolos);
 
-                        Boolean resultado = (Boolean) solverCondicion.resolverR();
-                        System.out.println(resultado);
+                    SolverRelacional solverCondicionF= new SolverRelacional(cond, tablaSimbolos);
+                    Boolean resultadoF = (Boolean) solverCondicionF.resolverR();
+                    while (resultadoF){
+                        Rama ramaFOR = new Rama(blockFor,tablaSimbolos);
+                        ramaFOR.recorrerR();
 
-                        if (resultado){ //VERDADERO
-                            System.out.println("RECORRER RAMA");
-                            //System.out.println(n.getValue().lexema);
-                            Nodo body = n; //LO QUE SIGUE DEL VERDADERO
-                            System.out.println(body.getValue().lexema);
-                            Rama ramaIf = new Rama(body,tablaSimbolos);
-                            ramaIf.recorrerR();
-                        }
+                        Rama incremento = new Rama(increment,tablaSimbolos);
+                        incremento.recorrerR();
+
+                        solverCondicionF = new SolverRelacional(cond, tablaSimbolos);
+                        resultadoF = (Boolean) solverCondicionF.resolverR();
+
                     }
-//----------------------------------INCREMENTO
-                    if (increment.getValue().tipo == TipoToken.EQUAL){ //"="
-                        Nodo id = increment.getHijos().get(0);
-                        if (tablaSimbolos.existeIdentificador(id.getValue().lexema)) {
-                            if(increment.getHijos().size() > 1 ){
-                                Nodo expression = increment.getHijos().get(1);
-                                //System.out.println("valor de expresion literal: " + expresion.getValue().literal);
-                                SolverAritmetico solverAritmetico = new SolverAritmetico(expression, tablaSimbolos);
-                                Object valor = solverAritmetico.resolver();
-                                tablaSimbolos.asignar(id.getValue().lexema, valor);
-                            }
-                        } else {
-                            System.out.println("Variable no declarada: " + id.getValue().lexema);
-                        }
-                    } else {
-                        System.out.println("No hay var");
-                    }
-
 
                     break;
                 case PRINT:

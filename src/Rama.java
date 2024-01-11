@@ -12,7 +12,7 @@ public class Rama {
         recorrer();
     }
     private void recorrer(){
-        System.out.println("RAMA");
+        //System.out.println("RAMA");
         //System.out.println(rama.getValue().tipo);
         //Nodo n = rama;
         for (Nodo n : rama.getHijos()){
@@ -23,11 +23,11 @@ public class Rama {
                 case MINUS:
                 case STAR:
                 case SLASH:
-                    System.out.println("CASO ARTIMETICOS");
+                    //System.out.println("CASO ARTIMETICOS");
                     //METODO DE ARITMETICOS
                     SolverAritmetico solver = new SolverAritmetico(n,tablaSimbolos);
                     Object res = solver.resolver();
-                    System.out.println(res);
+                    //System.out.println(res);
                     break;
                 //RELACIONALES
                 case GREATER:
@@ -36,11 +36,11 @@ public class Rama {
                 case LESS_EQUAL:
                 case EQUAL_EQUAL:
                 case BANG_EQUAL:
-                    System.out.println("CASO RELACIONALES");
+                    //System.out.println("CASO RELACIONALES");
                     //METODO DE RELACIONALES
                     SolverRelacional solverR = new SolverRelacional(n,tablaSimbolos);
                     Object res2 = solverR.resolverR();
-                    System.out.println(res2);
+                    //System.out.println(res2);
                     break;
                 //BOOLEANOS
                 case AND:
@@ -52,7 +52,7 @@ public class Rama {
                     System.out.println(res3);
                     break;
                 case VAR:
-                    System.out.println("CASO VAR");
+                    //System.out.println("CASO VAR");
                     // Aquí va la tabla de símbolos
                     Nodo variable = n;
                     if (variable.getValue().tipo == TipoToken.VAR){ //"="
@@ -158,8 +158,50 @@ public class Rama {
                     }
                     break;
                 case FOR:
-                    System.out.println("CASO FOR");
+                    //System.out.println("CASO FOR");
                     // resolver for
+                    Nodo para = n;
+                    System.out.println("for :" + para.getValue().lexema);
+                    Nodo decl = para.getHijos().get(0);//VAR
+                    Nodo cond = para.getHijos().get(1);//<
+                    Nodo increment = para.getHijos().get(2);//=
+                    Nodo blockFor = para;
+//----------------------------------DECLARACION
+                    if (decl.getValue().tipo == TipoToken.VAR){ //"="
+                        Nodo id = decl.getHijos().get(0);
+                        if (tablaSimbolos.existeIdentificador(id.getValue().lexema)) {
+                            System.out.println("Variable ya declarada: " + id.getValue().lexema);
+                        } else if (decl.getHijos().size() == 1 ){
+                            if(tablaSimbolos.existeIdentificador(id.getValue().lexema)){
+                                System.out.println("Variable ya declarada: " + id.getValue().lexema);
+                            } else {
+                                tablaSimbolos.asignar(id.getValue().lexema, null);
+                            }
+                        } else {
+                            Nodo expression = decl.getHijos().get(1);
+                            //System.out.println("valor de expresion literal: " + expresion.getValue().literal);
+                            SolverAritmetico solverAritmetico = new SolverAritmetico(expression, tablaSimbolos);
+                            Object valor = solverAritmetico.resolver();
+                            tablaSimbolos.asignar(id.getValue().lexema, valor);
+                        }
+                    } else {
+                        System.out.println("No hay var");
+                    }
+//----------------------------------CONDICION
+
+                    SolverRelacional solverCondicionF= new SolverRelacional(cond, tablaSimbolos);
+                    Boolean resultadoF = (Boolean) solverCondicionF.resolverR();
+                    while (resultadoF){
+                        Rama ramaFOR = new Rama(blockFor,tablaSimbolos);
+                        ramaFOR.recorrerR();
+
+                        Rama incremento = new Rama(increment,tablaSimbolos);
+                        incremento.recorrerR();
+
+                        solverCondicionF = new SolverRelacional(cond, tablaSimbolos);
+                        resultadoF = (Boolean) solverCondicionF.resolverR();
+
+                    }
 
                     break;
                 case PRINT:
@@ -178,6 +220,21 @@ public class Rama {
                     }
                     //System.out.println(expresionImprimir);
                     break;
+                case EQUAL:
+                    Nodo id = n.getHijos().get(0);
+                    if (tablaSimbolos.existeIdentificador(id.getValue().lexema)) {
+
+                        Nodo expresion = n.getHijos().get(1);
+                        //System.out.println("valor de expresion literal: " + expresion.getValue().literal);
+                        solverAritmetico = new SolverAritmetico(expresion, tablaSimbolos);
+                        Object valor = solverAritmetico.resolver();
+                        tablaSimbolos.asignar(id.getValue().lexema, valor);
+                    } else {
+                        System.out.println("Falta declarar variable");
+                    }
+                    break;
+
+
             }
         }
 

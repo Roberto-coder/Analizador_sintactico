@@ -51,12 +51,12 @@ public class Interprete {
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.scan();
 
-            for(Token token : tokens){
+            /*for(Token token : tokens){
                 System.out.println(token);
-            }
+            }*/
 
             //SINTACTICO
-            Parser parser = new ASDR(tokens);
+            ASDR parser = new ASDR(tokens);
             parser.parse();
 
             //SEMANTICO
@@ -64,9 +64,9 @@ public class Interprete {
             GeneradorPosfija pfija = new GeneradorPosfija(tokens);
             List<Token> postfija = pfija.convertir();
 
-            for (Token token : postfija){
+            /*for (Token token : postfija){
                 System.out.println(token);
-            }
+            }*/
 
             GeneradorAST gast = new GeneradorAST(postfija);
             Arbol programa = gast.generarAST();

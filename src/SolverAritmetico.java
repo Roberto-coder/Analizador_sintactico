@@ -30,6 +30,8 @@ public class SolverAritmetico {
         // Por simplicidad se asume que la lista de hijos del nodo tiene dos elementos
             Nodo izq = n.getHijos().get(0);
             Nodo der = n.getHijos().get(1);
+        //System.out.println("-"+izq.getValue());
+        //System.out.println("-"+der.getValue());
 
             Object resultadoIzquierdo = resolver(izq);
             Object resultadoDerecho = resolver(der);
