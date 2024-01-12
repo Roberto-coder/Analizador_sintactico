@@ -112,8 +112,8 @@ public class Token {
             //RELACIONALES
             case GREATER:
             case GREATER_EQUAL:
-            case LESS:
             case LESS_EQUAL:
+            case LESS:
                 return 5;
             case EQUAL_EQUAL:
             case BANG_EQUAL:

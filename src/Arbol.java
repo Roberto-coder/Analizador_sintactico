@@ -46,7 +46,7 @@ public class Arbol {
                     //System.out.println(res3);
                     break;
                 case VAR:
-                    //System.out.println("CASO VAR");
+                    System.out.println("CASO VAR");
                     // Aquí va la tabla de símbolos
                     Nodo variable = n;
                     if (variable.getValue().tipo == TipoToken.VAR){ //"="
@@ -163,7 +163,7 @@ public class Arbol {
                     //System.out.println("CASO FOR");
                     // resolver for
                     Nodo para = n;
-                    System.out.println("for :" + para.getValue().lexema);
+                    //System.out.println("for :" + para.getValue().lexema);
                     Nodo decl = para.getHijos().get(0);//VAR
                     Nodo cond = para.getHijos().get(1);//<
                     Nodo increment = para.getHijos().get(2);//=
@@ -172,10 +172,10 @@ public class Arbol {
                     if (decl.getValue().tipo == TipoToken.VAR){ //"="
                         Nodo id = decl.getHijos().get(0);
                         if (tablaSimbolos.existeIdentificador(id.getValue().lexema)) {
-                            System.out.println("Variable ya declarada: " + id.getValue().lexema);
+                            //System.out.println("Variable ya declarada: " + id.getValue().lexema);
                         } else if (decl.getHijos().size() == 1 ){
                             if(tablaSimbolos.existeIdentificador(id.getValue().lexema)){
-                                System.out.println("Variable ya declarada: " + id.getValue().lexema);
+                                //System.out.println("Variable ya declarada: " + id.getValue().lexema);
                             } else {
                                 tablaSimbolos.asignar(id.getValue().lexema, null);
                             }
