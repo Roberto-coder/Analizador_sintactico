@@ -17,4 +17,12 @@ public class StmtPrint extends Statement {
 
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        System.out.println(expression.evaluate(tablita));
+        return null;
+
+    }
+
 }

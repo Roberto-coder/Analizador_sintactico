@@ -22,4 +22,30 @@ public class ExprUnary extends Expression{
         right.imprimir(indentation + "\t\t└>");
         //System.out.println(indentation + "\t"+'└'+this.toString());
     }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        Object expr = right.evaluate(tablita);
+        switch (operator.tipo) {
+            case MINUS:
+                if (!(expr instanceof Double)) {
+                    throw new RuntimeException("El operador '-' no se puede aplicar ya que no es un numero.");
+                }
+                if (expr instanceof Double) {
+                    return -(double) expr;
+                }
+            case BANG:
+                return !isTruthy(expr);
+
+
+            default:
+                throw new RuntimeException("Operador unario no soportado: " + operator.tipo);
+        }
+    }
+
+    private boolean isTruthy(Object object) {
+        if (object == null) return false;
+        if (object instanceof Boolean) return (Boolean) object;
+        return true;
+    }
 }

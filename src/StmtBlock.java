@@ -1,4 +1,4 @@
-import javax.swing.plaf.nimbus.State;
+
 import java.util.List;
 
 public class StmtBlock extends Statement{
@@ -25,4 +25,24 @@ public class StmtBlock extends Statement{
         }
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        tablita.entrarAlcance();
+        Object returnValue = null;
+        try {
+            for (Statement stmt : statements) {
+                returnValue = stmt.evaluate(tablita);
+                if (returnValue instanceof StmtReturn) {
+                    break;
+                }
+            }
+        } finally {
+            tablita.salirAlcance();
+        }
+        return returnValue;
+    }
+
+
+
 }

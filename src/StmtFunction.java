@@ -33,4 +33,11 @@ public class StmtFunction extends Statement {
         body.imprimir(indentation + "\t\t└>");
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        tablita.registrarFuncion(name.lexema, this);
+        return null;
+    }
+
 }

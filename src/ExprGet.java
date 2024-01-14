@@ -22,4 +22,9 @@ public class ExprGet extends Expression{
         System.out.println(indentation + "\tNombre: " + name.lexema);
         //System.out.println(indentation+ "\t"+'└'+this.toString());
     }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        return null;
+    }
 }

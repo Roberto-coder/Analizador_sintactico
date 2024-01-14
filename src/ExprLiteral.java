@@ -29,4 +29,10 @@ class ExprLiteral extends Expression {
         //System.out.println(indentation + "ExpressionLiteral: " + value);
         //System.out.println(indentation+ "\t"+'└'+this.toString());
     }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        // Simplemente devuelve el valor del literal
+        return value;
+    }
 }

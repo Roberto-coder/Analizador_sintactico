@@ -27,4 +27,13 @@ public class StmtReturn extends Statement {
 
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        //System.out.println(value.evaluate(tablita));
+
+        return value.evaluate(tablita);
+
+    }
+
 }

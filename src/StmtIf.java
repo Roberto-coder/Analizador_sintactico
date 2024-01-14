@@ -9,21 +9,6 @@ public class StmtIf extends Statement {
         this.elseBranch = elseBranch;
     }
 
-    /*@Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("(if ").append(condition).append("\n");
-        builder.append("(then ").append(thenBranch).append(")\n");
-
-        if (elseBranch != null) {
-            builder.append("(else ").append(elseBranch).append(")\n");
-        }
-
-        builder.append(")");
-        return builder.toString();
-    }*/
-
     public String toString() {
         if (elseBranch != null) {
             return "Declara IF:(Condicion->"+condition.toString()+" THEN-> "+thenBranch.toString()+" ELSE-> "+elseBranch.toString();
@@ -47,5 +32,21 @@ public class StmtIf extends Statement {
             elseBranch.imprimir(indentation + "\t\t");
         }
         //System.out.println(indentation+"\t"+'└'+this.toString());
+    }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        if (!(condition.evaluate(tablita) instanceof Boolean)) {
+            throw new RuntimeException("La condición de if no es booleana.");
+        }
+        if ((Boolean) condition.evaluate(tablita)) {
+            // tablita.entrarAlcance();
+            return thenBranch.evaluate(tablita);
+        } else if (elseBranch != null) {
+            //   tablita.salirAlcance();
+            return elseBranch.evaluate(tablita);
+
+        }
+        return null;
     }
 }

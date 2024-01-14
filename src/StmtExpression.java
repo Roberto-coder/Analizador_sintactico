@@ -20,4 +20,9 @@ public class StmtExpression extends Statement {
         expression.imprimir(indentation + "\t└>");
         //System.out.println(indentation+"\t"+'└'+this.toString());
     }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        return expression.evaluate(tablita);
+    }
 }

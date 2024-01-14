@@ -26,5 +26,27 @@ public class ExprLogical extends Expression{
         right.imprimir(indentation + "\t\t└>");
         //System.out.println(indentation+ "\t"+'└'+this.toString());
     }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        Object leftValue = left.evaluate(tablita);
+        Object rightValue = right.evaluate(tablita);
+        if (!(leftValue instanceof Boolean && rightValue instanceof Boolean)) {
+            throw new RuntimeException("Error, las operaciones lógicas solo pueden realizarse con valores booleanos");
+        }
+
+        switch (operator.tipo)
+        {
+            case AND:
+                return ((Boolean) leftValue && (Boolean) rightValue);
+            case OR:
+                return ((Boolean) leftValue || (Boolean) rightValue);
+            default:
+                throw new RuntimeException("Operador lógico no soportado: " + operator.lexema);
+        }
+
+
+    }
+
 }
 

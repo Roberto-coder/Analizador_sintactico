@@ -19,4 +19,16 @@ public class ExprAssign extends Expression{
         value.imprimir(indentation +"\t└>");
         //System.out.println(indentation+"\t"+ '└'+this.toString());
     }
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        Object evaluatedValue = value.evaluate(tablita);
+
+        if (tablita.existeIdentificador(name.lexema)) {
+            tablita.asignar(name.lexema, evaluatedValue);
+        } else {
+            throw new RuntimeException("La variable '" + name.lexema + "' no está definida.");
+        }
+
+        return evaluatedValue;
+    }
 }

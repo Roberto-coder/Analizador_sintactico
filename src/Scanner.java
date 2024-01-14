@@ -312,7 +312,7 @@ public class Scanner {
                         lexema = "";
                         //i--;
                     }else{
-                        Token t = new Token(TipoToken.NUMBER, lexema, Float.valueOf(lexema));
+                        Token t = new Token(TipoToken.NUMBER, lexema, Double.valueOf(lexema));
                         tokens.add(t);
 
                         estado = 0;

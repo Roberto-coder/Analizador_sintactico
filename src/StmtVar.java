@@ -23,11 +23,26 @@ public class StmtVar extends Statement {
         System.out.print(indentation + "└>StatementVar: ");
         System.out.print(indentation + "Nombre de la variable " + name.lexema);
         if (initializer != null) {
-            System.out.print(" igual a ");
+            System.out.print(" = ");
             initializer.imprimir(""); // Sin indentación adicional para el inicializador
         }
-        System.out.print(";");
+        //System.out.println(";");
         //System.out.println(indentation+"\t"+'└'+this.toString());
 
     }
+
+    @Override
+    public Object evaluate(TablaSimbolos tablita) {
+        Object value = null;
+        if (initializer != null) {
+            value = initializer.evaluate(tablita);
+        }
+
+        if (!tablita.existeIdentificador(name.lexema)) {
+            tablita.declarar(name.lexema, value);
+        }
+
+        return null;
+    }
+
 }

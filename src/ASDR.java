@@ -49,6 +49,7 @@ public class ASDR implements Parser {
     private final Token finCadena = new Token(TipoToken.EOF, "");
 
     private List<Statement> nodos;
+    private TablaSimbolos tablita = new TablaSimbolos();
 
     public ASDR(List<Token> tokens) {
         this.tokens = tokens;
@@ -62,7 +63,7 @@ public class ASDR implements Parser {
 
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
             System.out.println("Consulta correcta");
-            printTree();
+            evaluateStatements(nodos);
             return true;
         } else {
             System.out.println("Se encontraron errores");
@@ -144,33 +145,40 @@ public class ASDR implements Parser {
             if (preanalisis.equals(identificador)) {
                 Token name = preanalisis;
                 coincidir(identificador);
-                Expression initializer = null;
-                if (preanalisis.tipo == TipoToken.EQUAL) {
-                    initializer = Var_init(initializer);
-                }
-                if (preanalisis.equals(puntoycoma)) {
-                    coincidir(puntoycoma);
-                    return new StmtVar(name, initializer);
-                }
+                Expression initializer = Var_init();
+                coincidir(puntoycoma);
+                return new StmtVar(name, initializer);
             }
-
+            return null;
         } else {
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba una 'var'.");
             return null;
         }
+    }
+
+    Expression Var_assign2() {
+        if (preanalisis.tipo == TipoToken.IDENTIFIER) {
+            Token name = preanalisis;
+
+            coincidir(identificador);
+            coincidir(igual);
+            Expression value = Expression(); // Método que analiza el lado derecho de la asignación
+            return new ExprAssign(name, value);
+        }
         return null;
     }
 
-    Expression Var_init(Expression initializer) {
+    Expression Var_init() {
         if (hayErrores) return null;
         if (preanalisis.equals(igual)) {
             coincidir(igual);
-            initializer =Expression();
+            Expression initializer =Expression();
+            return initializer;
         } else { //EPSILON
 
         }
-        return initializer;
+        return null;
     }
 
 
@@ -199,8 +207,11 @@ Statement Statement(){
         } else if(preanalisis.equals(llave_abre)){
             Statement block = Block();
             return block;
+        }else {
+            hayErrores = true;
+            System.out.println("Error");
+            return null;
         }
-        return null;
     }
     Statement Expr_stmt(){
         if(hayErrores) return null;
@@ -243,6 +254,7 @@ Statement Statement(){
                 if (initializer != null) {
                     body = new StmtBlock(Arrays.asList(initializer, body));
                 }
+
 
             }
         } else {
@@ -428,6 +440,11 @@ Statement Statement(){
     /*----------------------------------------------------------------*/
 /*----------------------Expresiones--------------------------------*/
     Expression Expression(){
+
+        if (preanalisis.tipo == TipoToken.IDENTIFIER && siguiente().tipo == TipoToken.EQUAL) {
+            return Var_assign2();
+        }
+
         if(hayErrores) return null;
         Expression expr =Assignment();
         return expr;
@@ -443,10 +460,13 @@ Statement Statement(){
     Expression Assignment_opc(Expression expr){
         if(hayErrores) return null;
         if(preanalisis.equals(igual)){
+            if (!(expr instanceof ExprVariable)) {
+                throw new RuntimeException("El lado izquierdo de una asignación debe ser una variable.");
+            }
             Token operadorL = preanalisis;
             coincidir(igual);
-            expr = Expression();
-            return new ExprAssign(operadorL, expr);
+            Expression expr1 = Expression();
+            return new ExprAssign(operadorL, expr1);
         } else { //EPSILON
 
         }
@@ -508,13 +528,13 @@ Statement Statement(){
             Token operador = preanalisis;
             coincidir(diferente_de);
             Expression expr2 = Comparison();
-            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            ExprBinary expb = new ExprBinary(expr, operador, expr2,tablita);
             return Equality_2(expb);
         } else if(preanalisis.equals(igual_a)){
             Token operador = preanalisis;
             coincidir(igual_a);
             Expression expr2 =Comparison();
-            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            ExprBinary expb = new ExprBinary(expr, operador, expr2,tablita);
             return Equality_2(expb);
         } else { //EPSILON
 
@@ -535,25 +555,25 @@ Statement Statement(){
             Token operador = preanalisis;
             coincidir(mayor_a);
             Expression expr2 = Term();
-            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            ExprBinary expb = new ExprBinary(expr, operador, expr2,tablita);
             return Comparison_2(expb);
         } else if(preanalisis.equals(mayor_iguala)){
             Token operador = preanalisis;
             coincidir(mayor_iguala);
             Expression expr2 = Term();
-            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            ExprBinary expb = new ExprBinary(expr, operador, expr2,tablita);
             return Comparison_2(expb);
         } else if(preanalisis.equals(menor_a)){
             Token operador = preanalisis;
             coincidir(menor_a);
             Expression expr2 = Term();
-            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            ExprBinary expb = new ExprBinary(expr, operador, expr2,tablita);
             return Comparison_2(expb);
         } else if(preanalisis.equals(menor_iguala)){
             Token operador = preanalisis;
             coincidir(menor_iguala);
             Expression expr2 = Term();
-            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            ExprBinary expb = new ExprBinary(expr, operador, expr2,tablita);
             return Comparison_2(expb);
         } else { //EPSILON
 
@@ -574,14 +594,14 @@ Statement Statement(){
             Token operador = preanalisis;
             coincidir(resta);
             Expression expr2=Factor();
-            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            ExprBinary expb = new ExprBinary(expr, operador, expr2,tablita);
             return Term_2(expb);
             //return FACTOR_2(expb);
         } else if(preanalisis.equals(suma)){
             Token operador = preanalisis;
             coincidir(suma);
             Expression expr2=Factor();
-            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            ExprBinary expb = new ExprBinary(expr, operador, expr2,tablita);
             return Term_2(expb);
             //return FACTOR_2(expb);
         } else { //EPSILON
@@ -603,13 +623,13 @@ Statement Statement(){
             Token operador = preanalisis;
             coincidir(division);
             Expression expr2 = Unary();
-            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            ExprBinary expb = new ExprBinary(expr, operador, expr2,tablita);
             return Factor_2(expb);
         } else if(preanalisis.equals(multiplicacion)){
             Token operador = preanalisis;
             coincidir(multiplicacion);
             Expression expr2 = Unary();
-            ExprBinary expb = new ExprBinary(expr, operador, expr2);
+            ExprBinary expb = new ExprBinary(expr, operador, expr2,tablita);
             return Factor_2(expb);
         } else { //EPSILON
 
@@ -648,8 +668,8 @@ Statement Statement(){
             List<Expression> lstArguments =Arguments_opc();
             if(preanalisis.equals(parentesis_cierra)){
                 coincidir(parentesis_cierra);
-                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);
-                return Call_2(ecf);
+                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments,tablita);
+                return ecf;
             }
         } else { //EPSILON
 
@@ -679,7 +699,7 @@ Statement Statement(){
         } else if(preanalisis.equals(identificador)){
             Token id = preanalisis;
             coincidir(identificador);
-            return new ExprVariable(id);
+            return new ExprVariable(id,tablita);
         } else if(preanalisis.equals(parentesis_abre)){
             coincidir(parentesis_abre);
             Expression expr = Expression();
@@ -720,12 +740,12 @@ Statement Function(){
         System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificiador'.");
         return null;
     }
-    return functionDecl;
+    return null;
 }
 
     void Functions(){
         if(hayErrores) return;
-        if(preanalisis.equals(identificador)){
+        if(preanalisis.equals(fun)){
             Fun_decl();
             Functions();
         } else { //EPSILON
@@ -740,14 +760,15 @@ Statement Function(){
         if(preanalisis.equals(identificador)){
             //coincidir(identificador);
             Parameters(params);
+            return params;
         } else { //EPSILON
 
         }
-        return params;
+        return null;
     }
 
-    void Parameters(List<Token> params){
-        if(hayErrores) return;
+    List<Token> Parameters(List<Token> params){
+        if(hayErrores) return null;
         if(preanalisis.equals(identificador)){
             Token paramToken = preanalisis;
             coincidir(identificador);
@@ -757,10 +778,11 @@ Statement Function(){
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificador'.");
         }
+        return null;
     }
 
-    void Parameters_2(List<Token> parametros){
-        if(hayErrores) return;
+    List<Token> Parameters_2(List<Token> parametros){
+        if(hayErrores) return null;
         if(preanalisis.equals(coma)){
             coincidir(coma);
             if(preanalisis.equals(identificador)){
@@ -772,7 +794,7 @@ Statement Function(){
         } else { //EPSILON
 
         }
-
+        return parametros;
     }
 
     List<Expression> Arguments_opc(){
@@ -781,10 +803,11 @@ Statement Function(){
         if(preanalisis.equals(neg_logica) || preanalisis.equals(resta) || preanalisis.equals(verdadero) || preanalisis.equals(falso) || preanalisis.equals(nulo)  || preanalisis.equals(numero) || preanalisis.equals(cadena) || preanalisis.equals(identificador) || preanalisis.equals(parentesis_abre) ){
             arguments.add(Expression());
             Arguments(arguments);
+            return arguments;
         } else { //EPSILON
 
         }
-        return arguments;
+        return null;
     }
 
     /*void Arguments(){
@@ -794,16 +817,14 @@ Statement Function(){
 
     }*/
 
-    void Arguments(List<Expression> arguments){
-        if(hayErrores) return;
-        while (preanalisis.equals(coma)) {
+    List<Expression> Arguments(List<Expression> arguments){
+        if(hayErrores) return null;
+        if (preanalisis.equals(coma)) {
             coincidir(coma);
             arguments.add(Expression());
-            //Arguments();
+            Arguments(arguments);
         }
-        /*else { //EPSILON
-
-        }*/
+        return arguments;
 
     }
 
@@ -812,9 +833,22 @@ Statement Function(){
 
 /*----------------------------------------------------------------*/
 
-    public void printTree() {
+    /*public void printTree() {
         for (Statement stmt : nodos) {
             stmt.imprimir("\t");
+        }
+    }*/
+    private void evaluateStatements(List<Statement> nodos) {
+        for (Statement stmt : nodos) {
+            stmt.evaluate(tablita);
+        }
+    }
+
+    private Token siguiente() {
+        if (i < tokens.size() - 1) {
+            return tokens.get(i + 1);
+        } else {
+            return new Token(TipoToken.EOF, "");
         }
     }
 
