@@ -1,0 +1,7 @@
+var iable1=0;
+var iable2=0;
+fun sumar(iable1,iable2){
+    return iable1 + iable2;
+}
+print sumar(5,6);
+print "Fin";
