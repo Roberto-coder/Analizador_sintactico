@@ -12,7 +12,7 @@ class ExprVariable extends Expression {
 
     @Override
     public String toString() {
-        return "Expr Variable:("+name.lexema+")";
+        return name.lexema;
     }
 
     @Override
@@ -24,10 +24,10 @@ class ExprVariable extends Expression {
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
+    public Object scan(TablaSimbolos tablita) {
 
-        if (tablita.existeIdentificador(name.lexema)) {
-            return tablita.obtener(name.lexema);
+        if (tablita.existeID(name.lexema)) {
+            return tablita.obtenerID(name.lexema);
         } else {
             throw new RuntimeException("La variable '" + name.lexema + "' no está definida.");
         }

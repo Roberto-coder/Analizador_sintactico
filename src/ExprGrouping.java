@@ -18,7 +18,7 @@ public class ExprGrouping extends Expression {
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
-        return expression.evaluate(tablita);
+    public Object scan(TablaSimbolos tablita) {
+        return expression.scan(tablita);
     }
 }

@@ -24,8 +24,8 @@ public class ExprUnary extends Expression{
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
-        Object expr = right.evaluate(tablita);
+    public Object scan(TablaSimbolos tablita) {
+        Object expr = right.scan(tablita);
         switch (operator.tipo) {
             case MINUS:
                 if (!(expr instanceof Double)) {

@@ -13,7 +13,7 @@ public class TablaSimbolos {
         alcance.push(alcanceGlobal);
     }
 
-    boolean existeIdentificador(String identificador) {
+    boolean existeID(String identificador) {
         for (int i = alcance.size() - 1; i >= 0; i--) {
             if (alcance.get(i).containsKey(identificador)) {
                 return true;
@@ -23,7 +23,7 @@ public class TablaSimbolos {
     }
 
 
-    Object obtener(String identificador) {
+    Object obtenerID(String identificador) {//Nombre de la funcion o variable
         for (int i = alcance.size() - 1; i >= 0; i--) {
             if (alcance.get(i).containsKey(identificador)) {
                 return alcance.get(i).get(identificador);
@@ -38,16 +38,6 @@ public class TablaSimbolos {
         throw new RuntimeException("Identificador no definido '" + identificador + "'.");
     }
 
-    void entrarAlcance() {
-        alcance.push(new HashMap<>());
-    }
-
-    void salirAlcance() {
-        if (!alcance.isEmpty()) {
-            alcance.pop();
-        }
-    }
-
 
     void declarar(String identificador, Object valorInicial) {
         Map<String, Object> alcanceActual = alcance.peek();
@@ -56,7 +46,7 @@ public class TablaSimbolos {
     }
 
     void asignar(String identificador, Object valor) {
-        for (int i = alcance.size() - 1; i >= 0; i--) {
+        for (int i = alcance.size() - 1; i >= 0; i--) {//Buscar y reemplazar
             Map<String, Object> alcanceActual = alcance.get(i);
             if (alcanceActual.containsKey(identificador)) {
                 alcanceActual.put(identificador, valor);

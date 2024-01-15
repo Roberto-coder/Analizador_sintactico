@@ -28,9 +28,9 @@ public class ExprLogical extends Expression{
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
-        Object leftValue = left.evaluate(tablita);
-        Object rightValue = right.evaluate(tablita);
+    public Object scan(TablaSimbolos tablita) {
+        Object leftValue = left.scan(tablita);
+        Object rightValue = right.scan(tablita);
         if (!(leftValue instanceof Boolean && rightValue instanceof Boolean)) {
             throw new RuntimeException("Error, las operaciones lógicas solo pueden realizarse con valores booleanos");
         }

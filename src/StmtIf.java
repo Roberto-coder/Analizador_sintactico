@@ -35,16 +35,16 @@ public class StmtIf extends Statement {
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
-        if (!(condition.evaluate(tablita) instanceof Boolean)) {
+    public Object recorrer(TablaSimbolos tablita) {
+        if (!(condition.scan(tablita) instanceof Boolean)) {
             throw new RuntimeException("La condición de if no es booleana.");
         }
-        if ((Boolean) condition.evaluate(tablita)) {
+        if ((Boolean) condition.scan(tablita)) {
             // tablita.entrarAlcance();
-            return thenBranch.evaluate(tablita);
+            return thenBranch.recorrer(tablita);
         } else if (elseBranch != null) {
             //   tablita.salirAlcance();
-            return elseBranch.evaluate(tablita);
+            return elseBranch.recorrer(tablita);
 
         }
         return null;

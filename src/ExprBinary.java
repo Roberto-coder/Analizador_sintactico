@@ -29,10 +29,11 @@ public class ExprBinary extends Expression{
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
-        Object izq = left.evaluate(tablita);
+    public Object scan(TablaSimbolos tablita) {
+        Object izq = left.scan(tablita);
         //System.out.println(izq+": "+izq.getClass());
-        Object der = right.evaluate(tablita);
+        Object der = right.scan(tablita);
+
         //System.out.println(der+": "+der.getClass());
         if (izq instanceof Double && der instanceof Double) {
             switch (operator.tipo) {

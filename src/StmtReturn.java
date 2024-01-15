@@ -29,10 +29,10 @@ public class StmtReturn extends Statement {
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
+    public Object recorrer(TablaSimbolos tablita) {
         //System.out.println(value.evaluate(tablita));
 
-        return value.evaluate(tablita);
+        return value.scan(tablita);
 
     }
 

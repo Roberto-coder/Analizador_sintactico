@@ -35,29 +35,26 @@ public class StmtLoop extends Statement {
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
+    public Object recorrer(TablaSimbolos tablita) {
         if (initialization != null) {
-            tablita.entrarAlcance();
             System.out.println("Inicialización del bucle for");
-            initialization.evaluate(tablita);
+            initialization.recorrer(tablita);
         }
 
-        while (condition == null || (Boolean) condition.evaluate(tablita)) {
+        while (condition == null || (Boolean) condition.scan(tablita)) {
             //System.out.println("Evaluando StmtLoop");
             //System.out.println("Evaluando condición del bucle for, condición es: " + condition.evaluate(tablita));
             // Resto del código del bucle
-            body.evaluate(tablita);
+            body.recorrer(tablita);
 
             if (update != null) {
-                update.evaluate(tablita);
+                update.scan(tablita);
                 // System.out.println("Actualización del bucle for realizada");
             }
 
         }
 
-        if (initialization != null) {
-            tablita.salirAlcance();
-        }
+
 
         return null;
     }

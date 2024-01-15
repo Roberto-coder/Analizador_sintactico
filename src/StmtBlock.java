@@ -27,18 +27,17 @@ public class StmtBlock extends Statement{
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
-        tablita.entrarAlcance();
+    public Object recorrer(TablaSimbolos tablita) {
         Object returnValue = null;
         try {
             for (Statement stmt : statements) {
-                returnValue = stmt.evaluate(tablita);
+                returnValue = stmt.recorrer(tablita);
                 if (returnValue instanceof StmtReturn) {
                     break;
                 }
             }
         } finally {
-            tablita.salirAlcance();
+
         }
         return returnValue;
     }

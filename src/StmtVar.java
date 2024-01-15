@@ -32,13 +32,13 @@ public class StmtVar extends Statement {
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
+    public Object recorrer(TablaSimbolos tablita) {
         Object value = null;
         if (initializer != null) {
-            value = initializer.evaluate(tablita);
+            value = initializer.scan(tablita);
         }
 
-        if (!tablita.existeIdentificador(name.lexema)) {
+        if (!tablita.existeID(name.lexema)) {
             tablita.declarar(name.lexema, value);
         }
 

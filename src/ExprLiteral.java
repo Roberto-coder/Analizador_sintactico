@@ -31,7 +31,7 @@ class ExprLiteral extends Expression {
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
+    public Object scan(TablaSimbolos tablita) {
         // Simplemente devuelve el valor del literal
         return value;
     }

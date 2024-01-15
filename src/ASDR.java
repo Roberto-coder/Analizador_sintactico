@@ -10,7 +10,6 @@ public class ASDR implements Parser {
     //tokens
     private final Token identificador = new Token(TipoToken.IDENTIFIER, "");
     private final Token coma = new Token(TipoToken.COMMA, ",");
-    private final Token punto = new Token(TipoToken.DOT, ".");
     private final Token var = new Token(TipoToken.VAR, "var");
     private final Token imprimir = new Token(TipoToken.PRINT, "print");
     private final Token fun = new Token(TipoToken.FUN, "fun");
@@ -63,6 +62,7 @@ public class ASDR implements Parser {
 
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
             System.out.println("Consulta correcta");
+            //printTree();
             evaluateStatements(nodos);
             return true;
         } else {
@@ -94,7 +94,7 @@ public class ASDR implements Parser {
             preanalisis = tokens.get(i);
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba un  " + t.tipo);
+            System.out.println( ". Se esperaba un  " + t.tipo);
         }
     }
     /*--------------------------------------------------------------*/
@@ -133,7 +133,7 @@ public class ASDR implements Parser {
             return funDecl;
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'fun'.");
+            System.out.println( ". Se esperaba 'fun'.");
             return null;
         }
     }
@@ -152,7 +152,7 @@ public class ASDR implements Parser {
             return null;
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba una 'var'.");
+            System.out.println( ". Se esperaba una 'var'.");
             return null;
         }
     }
@@ -221,7 +221,7 @@ Statement Statement(){
             return new StmtExpression(expr);
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba ';'.");
+            System.out.println(". Se esperaba ';'.");
         }
 
         return null;
@@ -259,7 +259,7 @@ Statement Statement(){
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'for'.");
+            System.out.println( ". Se esperaba 'for'.");
         }
         return body;
     }
@@ -275,7 +275,7 @@ Statement Statement(){
             return null;
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'var', una 'expresion' ó ';'.");
+            System.out.println( ". Se esperaba 'var', una 'expresion' ó ';'.");
             return null;
         }
 
@@ -295,7 +295,7 @@ Statement Statement(){
             return null;
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'for' o ';'.");
+            System.out.println(preanalisis.posicion + ". Se esperaba 'for' o ';'.");
         }
         return null;
     }
@@ -326,7 +326,7 @@ Statement Statement(){
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'if'.");
+            System.out.println( ". Se esperaba 'if'.");
         }
         return null;
     }
@@ -353,7 +353,7 @@ Statement Statement(){
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'print'.");
+            System.out.println(". Se esperaba 'print'.");
         }
         return null;
     }
@@ -370,7 +370,7 @@ Statement Statement(){
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'return'.");
+            System.out.println( ". Se esperaba 'return'.");
             return null;
         }
         return null;
@@ -401,7 +401,7 @@ Statement Statement(){
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba WHILE.");
+            System.out.println( ". Se esperaba WHILE.");
         }
         return null;
     }
@@ -420,7 +420,7 @@ Statement Statement(){
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba una LLAVE ABRIENDO.");
+            System.out.println(". Se esperaba una LLAVE ABRIENDO.");
             return null;
         }
         return null;
@@ -709,7 +709,7 @@ Statement Statement(){
             }
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba algun PRIMARY.");
+            System.out.println(  ". Se esperaba algun PRIMARY.");
             return null;
         }
         return null;
@@ -737,37 +737,27 @@ Statement Function(){
         }
     } else {
         hayErrores = true;
-        System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificiador'.");
+        System.out.println(". Se esperaba 'identificiador'.");
         return null;
     }
     return null;
 }
 
-    void Functions(){
-        if(hayErrores) return;
-        if(preanalisis.equals(fun)){
-            Fun_decl();
-            Functions();
-        } else { //EPSILON
-
-        }
-
-    }
-
     List<Token> Parameters_opc(){
         List<Token> params = new ArrayList<>();
         if(hayErrores) return null;
-        if(preanalisis.equals(identificador)){
+        /*if(preanalisis.equals(identificador)){//var
             //coincidir(identificador);
             Parameters(params);
             return params;
         } else { //EPSILON
 
-        }
-        return null;
+        }*/
+        Parameters(params);
+        return params;
     }
 
-    List<Token> Parameters(List<Token> params){
+    List<Token> Parameters(List<Token> params){//id
         if(hayErrores) return null;
         if(preanalisis.equals(identificador)){
             Token paramToken = preanalisis;
@@ -776,12 +766,12 @@ Statement Function(){
             Parameters_2(params);
         } else {
             hayErrores = true;
-            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba 'identificador'.");
+            System.out.println( ". Se esperaba 'identificador'.");
         }
         return null;
     }
 
-    List<Token> Parameters_2(List<Token> parametros){
+    List<Token> Parameters_2(List<Token> parametros){//,id,id,..
         if(hayErrores) return null;
         if(preanalisis.equals(coma)){
             coincidir(coma);
@@ -833,14 +823,15 @@ Statement Function(){
 
 /*----------------------------------------------------------------*/
 
-    /*public void printTree() {
+    public void printTree() {
         for (Statement stmt : nodos) {
-            stmt.imprimir("\t");
+            //stmt.imprimir("\t");
+            System.out.println(stmt.toString());
         }
-    }*/
+    }
     private void evaluateStatements(List<Statement> nodos) {
         for (Statement stmt : nodos) {
-            stmt.evaluate(tablita);
+            stmt.recorrer(tablita);
         }
     }
 

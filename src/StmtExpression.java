@@ -22,7 +22,7 @@ public class StmtExpression extends Statement {
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
-        return expression.evaluate(tablita);
+    public Object recorrer(TablaSimbolos tablita) {
+        return expression.scan(tablita);
     }
 }

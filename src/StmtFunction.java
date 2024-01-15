@@ -13,9 +13,13 @@ public class StmtFunction extends Statement {
         this.body = body;
     }
 
-    public String toString() {
+    /*public String toString() {
 
         return "Declara Funcion:(Nombre->"+name.toString()+" Parametros->"+params.toString()+" Cuerpo->"+body.toString()+")";
+    }*/
+    public String toString() {
+
+        return name.toString();
     }
 
     @Override
@@ -35,7 +39,7 @@ public class StmtFunction extends Statement {
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
+    public Object recorrer(TablaSimbolos tablita) {
         tablita.registrarFuncion(name.lexema, this);
         return null;
     }

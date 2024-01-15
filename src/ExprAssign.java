@@ -20,10 +20,10 @@ public class ExprAssign extends Expression{
         //System.out.println(indentation+"\t"+ '└'+this.toString());
     }
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
-        Object evaluatedValue = value.evaluate(tablita);
+    public Object scan(TablaSimbolos tablita) {
+        Object evaluatedValue = value.scan(tablita);
 
-        if (tablita.existeIdentificador(name.lexema)) {
+        if (tablita.existeID(name.lexema)) {
             tablita.asignar(name.lexema, evaluatedValue);
         } else {
             throw new RuntimeException("La variable '" + name.lexema + "' no está definida.");

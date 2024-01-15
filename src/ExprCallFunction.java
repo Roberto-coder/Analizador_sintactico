@@ -53,29 +53,31 @@ public class ExprCallFunction extends Expression{
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
+    public Object scan(TablaSimbolos tablita) {
+        /*StmtFunction funcionDef1 = (StmtFunction) callee;
+        Object function = tablita.obtenerFuncion(funcionDef1.name.lexema);*/
         Object function = tablita.obtenerFuncion(callee.toString());
 
         if (function instanceof StmtFunction) {
             StmtFunction funcionDef = (StmtFunction) function;
 
             if (arguments.size() != funcionDef.params.size()) {
-                throw new RuntimeException("Número incorrecto de argumentos para la funcion: " + funcionDef.name.lexema);
+                throw new RuntimeException("Número incorrecto de argumentos en la funcion: " + funcionDef.name.lexema);
             }
-            tablita.entrarAlcance();
+
             try {
                 for (int i = 0; i < funcionDef.params.size(); i++) {
-                    if (tablita.existeIdentificador(funcionDef.params.get(i).lexema)) {
-                        Object argValor = arguments.get(i).evaluate(tablita);
+                    if (tablita.existeID(funcionDef.params.get(i).lexema)) {
+                        Object argValor = arguments.get(i).scan(tablita);
                         tablita.declarar(funcionDef.params.get(i).lexema, argValor);
                     }else{
                         throw new RuntimeException("El parametro: "+funcionDef.params.get(i).lexema+" no esta declarado");
                     }
 
                 }
-                return funcionDef.body.evaluate(tablita);
+                return funcionDef.body.recorrer(tablita);
             } finally {
-                tablita.salirAlcance();
+
             }
         } else {
             throw new RuntimeException("El objeto al que deseas llamar no es una función.");

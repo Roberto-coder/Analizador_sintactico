@@ -19,8 +19,8 @@ public class StmtPrint extends Statement {
     }
 
     @Override
-    public Object evaluate(TablaSimbolos tablita) {
-        System.out.println(expression.evaluate(tablita));
+    public Object recorrer(TablaSimbolos tablita) {
+        System.out.println(expression.scan(tablita));
         return null;
 
     }
