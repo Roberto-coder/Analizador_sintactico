@@ -27,13 +27,18 @@ public class StmtBlock extends Statement{
 
     @Override
     public Object recorrer(TablaSimbolos tablita) {
+        tablita.insertarAlcance();
         Object returnValue = null;
+        try {
         for (Statement stmt : statements) {
             returnValue = stmt.recorrer(tablita);
             // Interrumpir la ejecución si se encuentra un statement de retorno
             if (returnValue instanceof StmtReturn) {
                 break;
             }
+        }
+        } finally {
+            tablita.salirAlcance();
         }
         return returnValue;
     }

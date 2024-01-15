@@ -61,10 +61,15 @@ public class ExprCallFunction extends Expression{
         }
 
         StmtFunction funcionDef = (StmtFunction) function;
+        tablita.insertarAlcance();
+        try{
         validarArgumentos(funcionDef.params, arguments);
 
         asignarParametros(tablita, funcionDef.params, arguments);
         return funcionDef.body.recorrer(tablita);
+        } finally {
+            tablita.salirAlcance();
+        }
     }
     private void validarArgumentos(List<Token> paramsDefinidos, List<Expression> argumentosPasados) {
         if (paramsDefinidos.size() != argumentosPasados.size()) {

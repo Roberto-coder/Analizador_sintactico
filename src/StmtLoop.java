@@ -52,6 +52,8 @@ public class StmtLoop extends Statement {
     public Object recorrer(TablaSimbolos tablita) {
         // Inicialización, si está presente (típicamente en bucles for)
         if (initialization != null) {
+            tablita.insertarAlcance();
+            //System.out.println("Bucle for");
             initialization.recorrer(tablita);
         }
 
@@ -71,6 +73,10 @@ public class StmtLoop extends Statement {
             if (condition != null) {
                 condicionEsVerdadera = (Boolean) condition.scan(tablita);
             }
+        }
+
+        if (initialization != null) {
+            tablita.salirAlcance();
         }
 
         return null;

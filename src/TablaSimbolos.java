@@ -21,6 +21,16 @@ public class TablaSimbolos {
         return registroMetodos.containsKey(identificador);
     }
 
+    void insertarAlcance() {
+        alcance.push(new HashMap<>());
+    }
+
+    void salirAlcance() {
+        if (!alcance.isEmpty()) {
+            alcance.pop();
+        }
+    }
+
     Object obtenerID(String identificador) {//Nombre de la funcion o variable
         for (int i = alcance.size() - 1; i >= 0; i--) {
             if (alcance.get(i).containsKey(identificador)) {//Verificar si esta en el bloque
