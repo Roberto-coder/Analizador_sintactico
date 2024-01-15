@@ -12,17 +12,20 @@ public class StmtPrint extends Statement {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "└>StatementPrint");
-        expression.imprimir(indentation + "\texpression");
-
-        //System.out.println(indentation+"\t"+'└'+this.toString());
+        System.out.println(indentation + "└> StatementPrint");
+        System.out.print(indentation + "\tExpresión a imprimir: ");
+        expression.imprimir(indentation + "\t\t");
     }
 
     @Override
     public Object recorrer(TablaSimbolos tablita) {
-        System.out.println(expression.scan(tablita));
-        return null;
-
+        try {
+            Object resultado = expression.scan(tablita);
+            System.out.println(resultado);
+            return null;
+        } catch (RuntimeException e) {
+            System.err.println("Error al imprimir expresión: " + e.getMessage());
+            throw e;
+        }
     }
-
 }

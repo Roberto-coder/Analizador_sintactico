@@ -62,7 +62,7 @@ public class ASDR implements Parser {
 
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
             System.out.println("Consulta correcta");
-            //printTree();
+            printTree();
             evaluateStatements(nodos);
             return true;
         } else {

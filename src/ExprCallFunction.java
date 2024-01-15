@@ -54,33 +54,34 @@ public class ExprCallFunction extends Expression{
 
     @Override
     public Object scan(TablaSimbolos tablita) {
-        /*StmtFunction funcionDef1 = (StmtFunction) callee;
-        Object function = tablita.obtenerFuncion(funcionDef1.name.lexema);*/
         Object function = tablita.obtenerFuncion(callee.toString());
 
-        if (function instanceof StmtFunction) {
-            StmtFunction funcionDef = (StmtFunction) function;
-
-            if (arguments.size() != funcionDef.params.size()) {
-                throw new RuntimeException("Número incorrecto de argumentos en la funcion: " + funcionDef.name.lexema);
-            }
-
-            try {
-                for (int i = 0; i < funcionDef.params.size(); i++) {
-                    if (tablita.existeID(funcionDef.params.get(i).lexema)) {
-                        Object argValor = arguments.get(i).scan(tablita);
-                        tablita.declarar(funcionDef.params.get(i).lexema, argValor);
-                    }else{
-                        throw new RuntimeException("El parametro: "+funcionDef.params.get(i).lexema+" no esta declarado");
-                    }
-
-                }
-                return funcionDef.body.recorrer(tablita);
-            } finally {
-
-            }
-        } else {
+        if (!(function instanceof StmtFunction)) {
             throw new RuntimeException("El objeto al que deseas llamar no es una función.");
+        }
+
+        StmtFunction funcionDef = (StmtFunction) function;
+        validarArgumentos(funcionDef.params, arguments);
+
+        asignarParametros(tablita, funcionDef.params, arguments);
+        return funcionDef.body.recorrer(tablita);
+    }
+    private void validarArgumentos(List<Token> paramsDefinidos, List<Expression> argumentosPasados) {
+        if (paramsDefinidos.size() != argumentosPasados.size()) {
+            throw new RuntimeException("Número incorrecto de argumentos esperados: "
+                    + paramsDefinidos.size() + ", recibidos: " + argumentosPasados.size());
+        }
+    }
+    private void asignarParametros(TablaSimbolos tabla, List<Token> parametros, List<Expression> valores) {
+        for (int i = 0; i < parametros.size(); i++) {
+            Token param = parametros.get(i);
+            Object valor = valores.get(i).scan(tabla);
+
+            if (!tabla.existeID(param.lexema)) {
+                throw new RuntimeException("El parámetro '" + param.lexema + "' no está declarado.");
+            }
+
+            tabla.declarar(param.lexema, valor);
         }
     }
 }

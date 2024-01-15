@@ -16,30 +16,28 @@ public class ExprUnary extends Expression{
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "ExpressionUnary");
+        System.out.println(indentation + "Expresión Unaria:");
         System.out.println(indentation + "\tOperador: " + operator.lexema);
-        System.out.println(indentation + "\tDerecha:");
-        right.imprimir(indentation + "\t\t└>");
-        //System.out.println(indentation + "\t"+'└'+this.toString());
+        System.out.println(indentation + "\tExpresión:");
+        right.imprimir(indentation + "\t\t");
     }
 
     @Override
     public Object scan(TablaSimbolos tablita) {
         Object expr = right.scan(tablita);
+
         switch (operator.tipo) {
             case MINUS:
                 if (!(expr instanceof Double)) {
-                    throw new RuntimeException("El operador '-' no se puede aplicar ya que no es un numero.");
+                    throw new RuntimeException("El operador '-' solo puede aplicarse a números. Tipo encontrado: " + expr.getClass().getSimpleName());
                 }
-                if (expr instanceof Double) {
-                    return -(double) expr;
-                }
+                return -(Double) expr;
+
             case BANG:
                 return !isTruthy(expr);
 
-
             default:
-                throw new RuntimeException("Operador unario no soportado: " + operator.tipo);
+                throw new RuntimeException("Operador unario no soportado: " + operator.lexema);
         }
     }
 
@@ -48,4 +46,6 @@ public class ExprUnary extends Expression{
         if (object instanceof Boolean) return (Boolean) object;
         return true;
     }
+
+
 }

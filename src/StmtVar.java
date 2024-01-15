@@ -20,29 +20,27 @@ public class StmtVar extends Statement {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.print(indentation + "└>StatementVar: ");
-        System.out.print(indentation + "Nombre de la variable " + name.lexema);
+        System.out.println(indentation + "└> StatementVar: Nombre de la variable '" + name.lexema + "'");
         if (initializer != null) {
-            System.out.print(" = ");
-            initializer.imprimir(""); // Sin indentación adicional para el inicializador
+            System.out.print(indentation + "\t└> Inicializador: ");
+            initializer.imprimir(indentation + "\t");
+        } else {
+            System.out.println(indentation + "\t└> Sin inicializador");
         }
-        //System.out.println(";");
-        //System.out.println(indentation+"\t"+'└'+this.toString());
-
     }
 
     @Override
     public Object recorrer(TablaSimbolos tablita) {
-        Object value = null;
-        if (initializer != null) {
-            value = initializer.scan(tablita);
-        }
+        // Evaluar el inicializador si está presente
+        Object value = (initializer != null) ? initializer.scan(tablita) : null;
 
+        // Declarar la variable en la tabla de símbolos
         if (!tablita.existeID(name.lexema)) {
             tablita.declarar(name.lexema, value);
+        } else {
+            throw new RuntimeException("La variable '" + name.lexema + "' ya está declarada.");
         }
 
         return null;
     }
-
 }

@@ -19,29 +19,22 @@ public class StmtBlock extends Statement{
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "StatementBlock");
+        System.out.println(indentation + "StatementBlock:");
         for (Statement stmt : statements) {
-            stmt.imprimir(indentation + "\t└>");
+            stmt.imprimir(indentation + "\t");
         }
-        //System.out.println(indentation+"\t"+'└'+this.toString());
     }
 
     @Override
     public Object recorrer(TablaSimbolos tablita) {
         Object returnValue = null;
-        try {
-            for (Statement stmt : statements) {
-                returnValue = stmt.recorrer(tablita);
-                if (returnValue instanceof StmtReturn) {
-                    break;
-                }
+        for (Statement stmt : statements) {
+            returnValue = stmt.recorrer(tablita);
+            // Interrumpir la ejecución si se encuentra un statement de retorno
+            if (returnValue instanceof StmtReturn) {
+                break;
             }
-        } finally {
-
         }
         return returnValue;
     }
-
-
-
 }

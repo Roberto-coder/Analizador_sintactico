@@ -18,35 +18,37 @@ public class StmtIf extends Statement {
 
     }
 
-    @Override
-    public void imprimir(String indentation) {
-        System.out.println(indentation + "└>StatementIf");
-        System.out.println(indentation + "\tCondicion:");
-        condition.imprimir(indentation + "\t\t");
+   @Override
+   public void imprimir(String indentation) {
+       System.out.println(indentation + "└> StatementIf");
+       System.out.println(indentation + "\t└> Condición:");
+       condition.imprimir(indentation + "\t\t");
 
-        System.out.println(indentation + "\tThen:");
-        thenBranch.imprimir(indentation + "\t\t");
+       System.out.println(indentation + "\t└> Then (Rama verdadera):");
+       thenBranch.imprimir(indentation + "\t\t");
 
-        if (elseBranch != null) {
-            System.out.println(indentation + "\tElse:");
-            elseBranch.imprimir(indentation + "\t\t");
-        }
-        //System.out.println(indentation+"\t"+'└'+this.toString());
-    }
+       if (elseBranch != null) {
+           System.out.println(indentation + "\t└> Else (Rama falsa):");
+           elseBranch.imprimir(indentation + "\t\t");
+       } else {
+           System.out.println(indentation + "\t└> Sin rama Else");
+       }
+   }
 
     @Override
     public Object recorrer(TablaSimbolos tablita) {
-        if (!(condition.scan(tablita) instanceof Boolean)) {
-            throw new RuntimeException("La condición de if no es booleana.");
+        Object condicion = condition.scan(tablita);
+        if (!(condicion instanceof Boolean)) {
+            throw new RuntimeException("La condición de 'if' no es booleana.");
         }
-        if ((Boolean) condition.scan(tablita)) {
-            // tablita.entrarAlcance();
-            return thenBranch.recorrer(tablita);
-        } else if (elseBranch != null) {
-            //   tablita.salirAlcance();
-            return elseBranch.recorrer(tablita);
 
+        if ((Boolean) condicion) {
+            return thenBranch.recorrer(tablita);
+        } else  {
+            return elseBranch.recorrer(tablita);
         }
-        return null;
+
+
     }
+
 }

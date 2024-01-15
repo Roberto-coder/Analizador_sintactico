@@ -16,13 +16,15 @@ public class StmtExpression extends Statement {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "StatementExpression");
-        expression.imprimir(indentation + "\t└>");
-        //System.out.println(indentation+"\t"+'└'+this.toString());
+        System.out.println(indentation + "StatementExpression:");
+        // Imprimir la expresión contenida en este statement
+        System.out.println(indentation + "\t└> Expresión: ");
+        expression.imprimir(indentation + "\t\t");
     }
 
     @Override
     public Object recorrer(TablaSimbolos tablita) {
+        // Ejecutar y devolver el resultado de la expresión contenida en este statement
         return expression.scan(tablita);
     }
 }

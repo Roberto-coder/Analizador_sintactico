@@ -21,14 +21,17 @@ public class ExprAssign extends Expression{
     }
     @Override
     public Object scan(TablaSimbolos tablita) {
+        // Evaluamos el valor de la expresión
         Object evaluatedValue = value.scan(tablita);
-
-        if (tablita.existeID(name.lexema)) {
-            tablita.asignar(name.lexema, evaluatedValue);
-        } else {
+        // Verificamos si el identificador existe en la tabla de símbolos
+        if (!tablita.existeID(name.lexema)) {
+            // Si no existe, lanzamos una excepción
             throw new RuntimeException("La variable '" + name.lexema + "' no está definida.");
         }
+        // Si el identificador existe, asignamos el valor evaluado
+        tablita.asignar(name.lexema, evaluatedValue);
 
+        // Retornamos el valor evaluado
         return evaluatedValue;
     }
 }

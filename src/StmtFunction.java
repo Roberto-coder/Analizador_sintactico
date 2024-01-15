@@ -26,16 +26,19 @@ public class StmtFunction extends Statement {
     public void imprimir(String indentation) {
         System.out.println(indentation + "StatementFunction: " + name.lexema);
 
-        // Imprimir los parámetros
-        System.out.println(indentation + "\tParametros:");
-        for (Token param : params) {
-            System.out.println(indentation + "\t\t" + param.lexema);
+        // Imprimir parámetros
+        if (params.isEmpty()) {
+            System.out.println(indentation + "\tParametros: Ninguno");
+        } else {
+            System.out.println(indentation + "\tParametros:");
+            for (Token param : params) {
+                System.out.println(indentation + "\t\t" + param.lexema);
+            }
         }
 
         // Imprimir el cuerpo de la función
-        System.out.println(indentation + "\tCuerpo:");
-        body.imprimir(indentation + "\t\t└>");
-        //System.out.println(indentation+"\t"+'└'+this.toString());
+        System.out.println(indentation + "\tCuerpo de la función:");
+        body.imprimir(indentation + "\t\t");
     }
 
     @Override

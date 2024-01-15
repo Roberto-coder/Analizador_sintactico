@@ -18,34 +18,34 @@ public class ExprLogical extends Expression{
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "ExpressionLogical");
-        System.out.println(indentation + "\tIzquierda:");
+        System.out.println(indentation + "Expresión Lógica:");
+        System.out.println(indentation + "\tIzquierda: ");
         left.imprimir(indentation + "\t\t");
         System.out.println(indentation + "\tOperador: " + operator.lexema);
-        System.out.println(indentation + "\tDerecha:");
-        right.imprimir(indentation + "\t\t└>");
-        //System.out.println(indentation+ "\t"+'└'+this.toString());
+        System.out.println(indentation + "\tDerecha: ");
+        right.imprimir(indentation + "\t\t");
     }
 
     @Override
     public Object scan(TablaSimbolos tablita) {
         Object leftValue = left.scan(tablita);
         Object rightValue = right.scan(tablita);
-        if (!(leftValue instanceof Boolean && rightValue instanceof Boolean)) {
-            throw new RuntimeException("Error, las operaciones lógicas solo pueden realizarse con valores booleanos");
+
+        // Asegurarse de que ambos valores sean booleanos antes de realizar operaciones lógicas
+        if (!(leftValue instanceof Boolean) || !(rightValue instanceof Boolean)) {
+            throw new RuntimeException("Error: las operaciones lógicas requieren valores booleanos. Encontrado: Izquierda: "
+                    + leftValue.getClass().getSimpleName() + ", Derecha: "
+                    + rightValue.getClass().getSimpleName());
         }
 
-        switch (operator.tipo)
-        {
+        switch (operator.tipo) {
             case AND:
-                return ((Boolean) leftValue && (Boolean) rightValue);
+                return (Boolean) leftValue && (Boolean) rightValue;
             case OR:
-                return ((Boolean) leftValue || (Boolean) rightValue);
+                return (Boolean) leftValue || (Boolean) rightValue;
             default:
                 throw new RuntimeException("Operador lógico no soportado: " + operator.lexema);
         }
-
-
     }
 
 }

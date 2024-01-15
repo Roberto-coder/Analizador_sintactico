@@ -15,25 +15,28 @@ class ExprVariable extends Expression {
         return name.lexema;
     }
 
+
     @Override
     public void imprimir(String indentation) {
-
         System.out.println(indentation + "└>ExpressionVariable: " + name.lexema);
-
-        //System.out.println(indentation+"\t"+'└'+this.toString());
+        // Verificar si la variable está definida
+        if (tablita.existeID(name.lexema)) {
+            System.out.println(indentation + "\t└>Valor: " + tablita.obtenerID(name.lexema));
+        } else {
+            System.out.println(indentation + "\t└>[Variable no definida]");
+        }
     }
 
     @Override
     public Object scan(TablaSimbolos tablita) {
-
+        // Verificar si la variable existe en la tabla de símbolos
         if (tablita.existeID(name.lexema)) {
+            // Devolver el valor de la variable
             return tablita.obtenerID(name.lexema);
         } else {
+            // Lanzar una excepción si la variable no está definida
             throw new RuntimeException("La variable '" + name.lexema + "' no está definida.");
         }
     }
 
-    public String getName(){
-        return name.lexema;
-    }
 }

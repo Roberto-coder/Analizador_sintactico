@@ -5,20 +5,21 @@ public class ExprGrouping extends Expression {
         this.expression = expression;
     }
 
-    @Override
-    public String toString() {
-        return "Expression Grouping: (Expression->" + expression.toString() + ")";
-    }
-
-    @Override
-    public void imprimir(String indentation) {
-        System.out.println(indentation + "ExpressionGrouping");
-        expression.imprimir(indentation + "\t└>");
-        //System.out.println(indentation + "\t"+ '└'+this.toString());
-    }
+   @Override
+   public void imprimir(String indentation) {
+       System.out.println(indentation + "Grupo de Expresión:");
+       if (expression != null) {
+           expression.imprimir(indentation + "\t└> ");
+       } else {
+           System.out.println(indentation + "\t└> [Expresión nula]");
+       }
+   }
 
     @Override
     public Object scan(TablaSimbolos tablita) {
+        if (expression == null) {
+            throw new RuntimeException("Intento de escanear una expresión nula en un grupo.");
+        }
         return expression.scan(tablita);
     }
 }

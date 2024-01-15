@@ -18,22 +18,22 @@ public class StmtReturn extends Statement {
 
     @Override
     public void imprimir(String indentation) {
-        System.out.println(indentation + "└>StatementReturn");
+        System.out.println(indentation + "└> StatementReturn");
         if (value != null) {
+            System.out.print(indentation + "\tValor de retorno: ");
             value.imprimir(indentation + "\t");
-        }else {
-            value.imprimir(indentation + "\t"+" return vacio");
+        } else {
+            System.out.println(indentation + "\tRetorno vacío (return;)");
         }
-
-        //System.out.println(indentation+"\t"+'└'+this.toString());
     }
 
     @Override
     public Object recorrer(TablaSimbolos tablita) {
-        //System.out.println(value.evaluate(tablita));
-
-        return value.scan(tablita);
-
+        // Evaluar y retornar el valor de la expresión, si está presente
+        if (value != null) {
+            return value.scan(tablita);
+        }
+        // Retornar null en caso de un retorno vacío
+        return null;
     }
-
 }
